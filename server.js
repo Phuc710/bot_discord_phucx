@@ -226,14 +226,16 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
+    const serverUrl = process.env.RENDER ? `https://${process.env.RENDER_SERVICE_NAME}.onrender.com` : `http://localhost:${PORT}`;
+    console.log(`🔗 Listening to Phucx : ${serverUrl}`);
     console.log('\n' + '═'.repeat(50));
     console.log(`🌐 Web Server đã khởi động thành công!`);
     console.log('═'.repeat(50));
-    console.log(`🔗 Địa chỉ Server: http://localhost:${PORT}`);
+    console.log(`🔗 Địa chỉ Server: ${serverUrl}`);
     console.log(`🎵 Tên Bot: Boo Music Bot`);
     console.log(`👨‍💻 Phát triển bởi: Phucx`);
-    console.log(`📍 Kiểm tra sức khỏe: http://localhost:${PORT}/health`);
+    console.log(`📍 Kiểm tra sức khỏe: ${serverUrl}/health`);
     console.log(`🇻🇳 Dành riêng cho người Việt Nam`);
     console.log('═'.repeat(50) + '\n');
 });

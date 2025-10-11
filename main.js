@@ -110,7 +110,7 @@ require('./handlers/economyScheduler')(client);
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);
 
-client.once('ready', async () => {
+client.once('clientReady', async () => {
     console.log('\n' + '─'.repeat(40));
     console.log(`${colors.magenta}${colors.bright}👾  THÔNG TIN BOT${colors.reset}`);
     console.log('─'.repeat(40));

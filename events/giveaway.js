@@ -15,7 +15,7 @@ module.exports = (client) => {
   }
 
   // Load giveaways when bot is ready to ensure MongoDB is connected
-  client.once('ready', async () => {
+  client.once('clientReady', async () => {
     // Wait a bit to ensure MongoDB connection is established
     setTimeout(async () => {
       await loadGiveaways();
