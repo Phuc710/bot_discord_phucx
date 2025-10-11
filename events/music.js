@@ -908,7 +908,7 @@ module.exports = (client) => {
 
         client.on('raw', d => client.riffy.updateVoiceState(d));
         
-        client.once('ready', () => {
+        client.once('clientReady', () => {
             client.riffy.init(client.user.id);
             console.log('\x1b[35m[ MUSIC ]\x1b[0m', '\x1b[32mLavalink Music System Active with Enhanced Cleanup ✅\x1b[0m');
             

@@ -127,7 +127,7 @@ module.exports = (client) => {
   }
 
  
-  client.once('ready', () => {
+  client.once('clientReady', () => {
     setInterval(async () => {
       try {
         await removeExpiredAFKs();

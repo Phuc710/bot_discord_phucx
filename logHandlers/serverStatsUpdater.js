@@ -220,6 +220,6 @@ module.exports = (client) => {
     if (client.isReady()) {
         startStatsUpdater();
     } else {
-        client.once('ready', startStatsUpdater);
+        client.once('clientReady', startStatsUpdater);
     }
 };

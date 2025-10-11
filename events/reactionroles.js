@@ -289,7 +289,7 @@ module.exports = (client) => {
     };
 
     // Call once on startup
-    client.once('ready', async () => {
+    client.once('clientReady', async () => {
         await rebuildReactionRoles();
         
 

@@ -13,7 +13,7 @@ module.exports = {
 
         let defaultIndex = 0;
         let customIndex = 0;
-        let currentInterval = 10000; 
+        let currentInterval = 30000; // 30 seconds instead of 10
 
         async function getCustomStatus() {
             const statusDoc = await botStatusCollection.findOne({});
@@ -79,8 +79,6 @@ module.exports = {
                     return;
                 }
                 
-                console.log(`${colors.cyan}[ DEBUG STATUS ]${colors.reset} ${colors.cyan}Đang cập nhật status bot...${colors.reset}`);
-                console.log(`${colors.cyan}[ DEBUG STATUS ]${colors.reset} ${colors.cyan}Config status:${colors.reset}`, JSON.stringify(config.status, null, 2));
 
                 const customStatus = await getCustomStatus();
                 
@@ -124,7 +122,6 @@ module.exports = {
                         }],
                         status: 'online'
                     });
-                    console.log(`${colors.green}[ STATUS SET ]${colors.reset} ${colors.green}Đã đặt status: ${statusName} (${next.type})${colors.reset}`);
                     defaultIndex++;
                 } else {
                     // Fallback status
@@ -192,7 +189,7 @@ module.exports = {
         async function checkAndUpdateInterval() {
             try {
                 const statusDoc = await botStatusCollection.findOne({});
-                const newInterval = statusDoc?.interval ? statusDoc.interval * 1000 : 10000;
+                const newInterval = statusDoc?.interval ? statusDoc.interval * 1000 : 30000;
                 
                 if (newInterval !== currentInterval) {
                     console.log(`${colors.cyan}[ STATUS ]${colors.reset} ${colors.cyan}Cập nhật chu kỳ: ${newInterval / 1000} giây${colors.reset}`);
@@ -205,7 +202,7 @@ module.exports = {
                         .catch((error) => {
                             console.error(`${colors.red}[ LỖI UPDATE ]${colors.reset} ${colors.red}Lỗi trong chu kỳ cập nhật:${colors.reset}`, error.message);
                             // Tiếp tục chu kỳ dù có lỗi
-                            setTimeout(() => checkAndUpdateInterval(), currentInterval);
+                            setTimeout(() => checkAndUpdateInterval(), 30000);
                         });
                 }, currentInterval);
             } catch (error) {
