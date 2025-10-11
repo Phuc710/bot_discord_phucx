@@ -128,6 +128,16 @@ module.exports = (client) => {
             if (oldState.member.id === client.user.id && oldState.channelId && !newState.channelId) {
                 const player = client.riffy.players.get(oldState.guild.id);
                 if (player) {
+                    // Reset bot status khi bị ngắt kết nối
+                    try {
+                        await client.user.setActivity({
+                            name: `🎵 Ready to play music!`,
+                            type: 2 // LISTENING
+                        });
+                        console.log('Bot status reset: Disconnected from voice');
+                    } catch (error) {
+                        console.error('Error resetting bot status:', error);
+                    }
                   
                     await messageManager.cleanupGuildMessages(client, oldState.guild.id);
                     
@@ -191,7 +201,18 @@ module.exports = (client) => {
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
-      
+            // Cập nhật bot status khi phát nhạc
+            try {
+                await client.user.setActivity({
+                    name: `${track.info.title} - ${track.info.author}`,
+                    type: 2, // LISTENING
+                    url: track.info.uri
+                });
+                console.log(`Bot status updated: Now playing ${track.info.title}`);
+            } catch (error) {
+                console.error('Error updating bot status:', error);
+            }
+            
             await messageManager.cleanupGuildMessages(client, guildId);
             
             function formatTime(ms) {
@@ -272,7 +293,23 @@ module.exports = (client) => {
         client.riffy.on('trackEnd', async (player) => {
             const guildId = player.guildId;
             
-           
+            // Reset bot status khi bài hát kết thúc
+            try {
+                // Kiểm tra xem còn player nào khác đang phát không
+                const hasOtherPlayers = Array.from(client.riffy.players.values())
+                    .some(p => p.guildId !== guildId && p.current);
+                    
+                if (!hasOtherPlayers) {
+                    await client.user.setActivity({
+                        name: `🎵 Ready to play music!`,
+                        type: 2 // LISTENING
+                    });
+                    console.log('Bot status reset: Ready to play music');
+                }
+            } catch (error) {
+                console.error('Error resetting bot status:', error);
+            }
+            
             await messageManager.cleanupGuildMessages(client, guildId, ['track']);
             
            
@@ -286,7 +323,17 @@ module.exports = (client) => {
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
-        
+            // Reset bot status khi queue kết thúc
+            try {
+                await client.user.setActivity({
+                    name: `🎵 Ready to play music!`,
+                    type: 2 // LISTENING
+                });
+                console.log('Bot status reset: Queue ended');
+            } catch (error) {
+                console.error('Error resetting bot status:', error);
+            }
+            
             await messageManager.cleanupGuildMessages(client, guildId);
             
            
@@ -404,6 +451,17 @@ module.exports = (client) => {
                         if (queueDisplayTimeouts.has(interaction.guildId)) {
                             clearTimeout(queueDisplayTimeouts.get(interaction.guildId));
                             queueDisplayTimeouts.delete(interaction.guildId);
+                        }
+                        
+                        // Reset bot status khi dừng nhạc
+                        try {
+                            await client.user.setActivity({
+                                name: `🎵 Ready to play music!`,
+                                type: 2 // LISTENING
+                            });
+                            console.log('Bot status reset: Music stopped manually');
+                        } catch (error) {
+                            console.error('Error resetting bot status:', error);
                         }
                         
                         player.destroy();
@@ -629,8 +687,31 @@ module.exports = (client) => {
                 return;
             }
         
+            // Phân tích lyrics có timestamp hoặc không
             const lines = lyrics.split('\n').map(line => line.trim()).filter(Boolean);
-            const songDuration = Math.floor(track.length / 1000); 
+            const songDuration = Math.floor(track.length / 1000);
+            
+            // Kiểm tra xem lyrics có timestamp không (format: [mm:ss.xx])
+            const hasTimestamps = lines.some(line => /^\[\d{2}:\d{2}\.\d{2}\]/.test(line));
+            let timestampedLines = [];
+            
+            if (hasTimestamps) {
+                // Parse lyrics với timestamp
+                timestampedLines = lines.map(line => {
+                    const timestampMatch = line.match(/^\[(\d{2}):(\d{2})\.(\d{2})\](.*)$/);
+                    if (timestampMatch) {
+                        const minutes = parseInt(timestampMatch[1]);
+                        const seconds = parseInt(timestampMatch[2]);
+                        const milliseconds = parseInt(timestampMatch[3]);
+                        const totalSeconds = minutes * 60 + seconds + milliseconds / 100;
+                        return {
+                            time: totalSeconds,
+                            text: timestampMatch[4].trim()
+                        };
+                    }
+                    return { time: 0, text: line };
+                }).filter(item => item.text);
+            }
         
             const embed = new EmbedBuilder()
                 .setTitle(`🎵 Live Lyrics: ${track.title}`)
@@ -666,18 +747,63 @@ module.exports = (client) => {
                         return;
                     }
                     
-                    const currentTime = Math.floor(player.position / 1000); 
+                    const currentTime = player.position / 1000; // Giữ lại số thập phân để độ chính xác cao hơn
                     const totalLines = lines.length;
+                    let visibleLines = '';
+                    let timeInfo = '';
             
-                   
-                    const linesPerSecond = totalLines / songDuration; 
-                    const currentLineIndex = Math.floor(currentTime * linesPerSecond); 
+                    if (hasTimestamps && timestampedLines.length > 0) {
+                        // Sử dụng timestamp chính xác
+                        let currentLineIndex = -1;
+                        let nextLineIndex = -1;
+                        
+                        // Tìm dòng hiện tại dựa trên timestamp
+                        for (let i = 0; i < timestampedLines.length; i++) {
+                            if (timestampedLines[i].time <= currentTime) {
+                                currentLineIndex = i;
+                            } else {
+                                nextLineIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // Hiển thị lyrics xung quanh dòng hiện tại
+                        const start = Math.max(0, currentLineIndex - 3);
+                        const end = Math.min(timestampedLines.length, currentLineIndex + 4);
+                        
+                        const visibleLinesArray = [];
+                        for (let i = start; i < end; i++) {
+                            if (timestampedLines[i]) {
+                                let lineText = timestampedLines[i].text;
+                                if (i === currentLineIndex) {
+                                    lineText = `🎤 **${lineText}**`; // Highlight dòng hiện tại
+                                }
+                                visibleLinesArray.push(lineText);
+                            }
+                        }
+                        
+                        visibleLines = visibleLinesArray.join('\n');
+                        timeInfo = `⏱️ [${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60).toString().padStart(2, '0')}/${Math.floor(songDuration / 60)}:${(songDuration % 60).toString().padStart(2, '0')}] 🎵\n\n`;
+                    } else {
+                        // Thuật toán cũ cho lyrics không có timestamp
+                        const linesPerSecond = totalLines / songDuration; 
+                        const currentLineIndex = Math.floor(currentTime * linesPerSecond); 
+                
+                        const start = Math.max(0, currentLineIndex - 3);
+                        const end = Math.min(totalLines, currentLineIndex + 4);
+                        
+                        const visibleLinesArray = lines.slice(start, end);
+                        const highlightIndex = currentLineIndex - start;
+                        
+                        if (highlightIndex >= 0 && highlightIndex < visibleLinesArray.length) {
+                            visibleLinesArray[highlightIndex] = `🎤 **${visibleLinesArray[highlightIndex]}**`;
+                        }
+                        
+                        visibleLines = visibleLinesArray.join('\n');
+                        timeInfo = `⏱️ [${Math.floor(currentTime / 60)}:${Math.floor(currentTime % 60).toString().padStart(2, '0')}/${Math.floor(songDuration / 60)}:${(songDuration % 60).toString().padStart(2, '0')}] 🎵\n\n`;
+                    }
             
-                    const start = Math.max(0, currentLineIndex - 3);
-                    const end = Math.min(totalLines, currentLineIndex + 4);
-                    const visibleLines = lines.slice(start, end).join('\n');
-            
-                    embed.setDescription(visibleLines);
+                    embed.setDescription(timeInfo + visibleLines);
                     
                     try {
                         const msg = await channel.messages.fetch(message.id);
@@ -711,7 +837,7 @@ module.exports = (client) => {
             };
         
     
-            const interval = setInterval(updateLyrics, 3000);
+            const interval = setInterval(updateLyrics, 1000); // Cập nhật mỗi 1 giây cho sync tốt hơn
             lyricIntervals.set(guildId, interval);
             
          
@@ -735,7 +861,20 @@ module.exports = (client) => {
                         lyricIntervals.delete(guildId);
                     }
                     
-                    embed.setDescription(lines.join('\n'));
+                    // Hiển thị full lyrics với hoặc không timestamp
+                    let fullLyricsText = '';
+                    if (hasTimestamps && timestampedLines.length > 0) {
+                        fullLyricsText = timestampedLines.map(item => item.text).join('\n');
+                    } else {
+                        fullLyricsText = lines.join('\n');
+                    }
+                    
+                    // Giới hạn độ dài để tránh vượt quá giới hạn Discord
+                    if (fullLyricsText.length > 4000) {
+                        fullLyricsText = fullLyricsText.substring(0, 4000) + '\n\n... (Lyrics truncated)';
+                    }
+                    
+                    embed.setDescription(fullLyricsText);
             
                     const deleteButton = new ButtonBuilder()
                         .setCustomId("deleteLyrics")
@@ -912,7 +1051,17 @@ module.exports = (client) => {
             client.riffy.init(client.user.id);
             console.log('\x1b[35m[ MUSIC ]\x1b[0m', '\x1b[32mLavalink Music System Active with Enhanced Cleanup ✅\x1b[0m');
             
-          
+            // Khởi tạo bot status
+            try {
+                client.user.setActivity({
+                    name: `🎵 Ready to play music!`,
+                    type: 2 // LISTENING
+                });
+                console.log('\x1b[35m[ BOT STATUS ]\x1b[0m', '\x1b[32mBot status initialized ✅\x1b[0m');
+            } catch (error) {
+                console.error('Error setting initial bot status:', error);
+            }
+            
             setTimeout(async () => {
                 for (const guild of client.guilds.cache.values()) {
                     await messageManager.cleanupGuildMessages(client, guild.id);

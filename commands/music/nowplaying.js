@@ -40,15 +40,32 @@ module.exports = {
                 return;
             }
             
+            // Tạo progress bar animation
+            const progress = Math.floor((player.position / currentTrack.info.length) * 100);
+            const progressBar = this.createProgressBar(progress);
+            const currentTime = this.formatTime(player.position);
+            const totalTime = this.formatTime(currentTrack.info.length);
+            
+            // Animation emojis
+            const musicEmojis = ['🎵', '🎶', '🎼', '🎹', '🎸', '🥁', '🎺', '🎷'];
+            const randomEmoji = musicEmojis[Math.floor(Math.random() * musicEmojis.length)];
+            
             const npEmbed = new EmbedBuilder()
-                .setColor('#DC92FF')
-                .setTitle('🎵 Đang Phát')
-                .setDescription(`**[${currentTrack.info.title}](${currentTrack.info.uri})**`)
+                .setColor('#00D4FF')
+                .setTitle(`${randomEmoji} Now Playing.. 🎧`)
+                .setDescription(`### ${currentTrack.info.title}\n\n${progressBar}\n**${currentTime}** ━━●━━━━━━━━ **${totalTime}**`)
                 .addFields(
-                    { name: '🎤 Nghệ sĩ', value: currentTrack.info.author || 'Không xác định', inline: true },
-                    { name: '⏱️ Thời lượng', value: this.formatTime(currentTrack.info.length), inline: true },
-                    { name: '👤 Yêu cầu bởi', value: currentTrack.requester?.username || 'Không xác định', inline: true }
-                );
+                    { name: '🎤 Artist', value: `\`${currentTrack.info.author || 'Unknown'}\``, inline: true },
+                    { name: '⏱️ Length', value: `\`${totalTime}\``, inline: true },
+                    { name: '🔊 Stream', value: currentTrack.info.isStream ? '🔴 **Live**' : '🟢 **Track**', inline: true },
+                    { name: '🔍 Seekable', value: currentTrack.info.isSeekable ? '✅ **Yes**' : '❌ **No**', inline: true },
+                    { name: '🌐 Source', value: `\`${currentTrack.info.sourceName || 'youtube'}\``, inline: true },
+                    { name: '👤 Requested by', value: `<@${currentTrack.requester?.id || interaction.user.id}>`, inline: true }
+                )
+                .setFooter({ 
+                    text: '🎼 Let the Beat Drop! • Boo Music Bot', 
+                    iconURL: interaction.client.user.displayAvatarURL() 
+                });
             
             if (currentTrack.info.artwork) {
                 npEmbed.setThumbnail(currentTrack.info.artwork);
@@ -74,5 +91,19 @@ module.exports = {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    },
+
+    createProgressBar(progress) {
+        const totalBars = 15;
+        const filledBars = Math.floor((progress / 100) * totalBars);
+        const emptyBars = totalBars - filledBars;
+        
+        const progressEmojis = ['🟢', '🟡', '🔵', '🟣', '🔴', '🟠'];
+        const randomProgressEmoji = progressEmojis[Math.floor(Math.random() * progressEmojis.length)];
+        
+        const filled = '█'.repeat(filledBars);
+        const empty = '░'.repeat(emptyBars);
+        
+        return `\`${filled}${randomProgressEmoji}${empty}\` **${progress}%**`;
     }
 };

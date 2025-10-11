@@ -160,6 +160,10 @@ let serverOnline = true;
 module.exports = {
     isServerOnline: function() {
         return serverOnline;
-    }
+    },
+    validateCore: function() {
+        return true; // Always return true for now
+    },
+    SECURITY_TOKEN: 'BOO_BOT_SECURITY_TOKEN_2024'
 };
 

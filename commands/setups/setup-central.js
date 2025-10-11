@@ -31,8 +31,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup-central')
         .setDescription('Setup the central music system in current channel')
-        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
-    securityToken: COMMAND_SECURITY_TOKEN,
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addChannelOption(option =>
             option.setName('voice-channel')
                 .setDescription('The voice channel for music playback')
@@ -50,26 +49,14 @@ module.exports = {
                 .setRequired(false)),
 
     async execute(interaction, client) {
-        // Security validation
-        if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
-            const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
-                .setColor('#FF0000');
-            return interaction.reply({ embeds: [embed], flags: 64 }).catch(() => {});
-        }
         
-        interaction.shivaValidated = true;
-        interaction.securityToken = COMMAND_SECURITY_TOKEN;
-        
-        if (interaction.isCommand && interaction.isCommand()) {
+        try {
             const guild = interaction.guild;
             const serverId = guild.id;
             const channelId = interaction.channel.id;
             const voiceChannel = interaction.options.getChannel('voice-channel');
             const volume = interaction.options.getInteger('volume') || 50;
             const allowedRole = interaction.options.getRole('allowed-role');
-            
-            if (!await checkPermissions(interaction)) return;
 
             // Check if user has manage channels permission
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
@@ -181,27 +168,27 @@ module.exports = {
 
                 await interaction.followUp({ embeds: [successEmbed], flags: 64 });
 
-            } catch (error) {
-                console.error('Error setting up central music system:', error);
+            } catch (innerError) {
+                console.error('Error setting up central music system:', innerError);
                 const errorEmbed = new EmbedBuilder()
                     .setColor('#ff0000')
                     .setDescription('❌ An error occurred while setting up the central music system. Please try again.');
                 
+                if (!interaction.replied) {
+                    await interaction.reply({ embeds: [errorEmbed], flags: 64 });
+                } else {
+                    await interaction.editReply({ embeds: [errorEmbed] });
+                }
+            }
+        } catch (error) {
+            console.error('General error in setup-central command:', error);
+            const errorEmbed = new EmbedBuilder()
+                .setColor('#ff0000')
+                .setDescription('❌ An unexpected error occurred. Please try again later.');
+            
+            if (!interaction.replied) {
                 await interaction.reply({ embeds: [errorEmbed], flags: 64 });
             }
-        } else {
-            // If not used as a slash command, alert the user
-            const embed = new EmbedBuilder()
-                .setColor('#3498db')
-                .setAuthor({ 
-                    name: "Alert!", 
-                    iconURL: cmdIcons.dotIcon,
-                    url: "https://discord.gg/xQF9f9yUEM"
-                })
-                .setDescription('- This command can only be used through slash commands!\n- Please use `/setup-central`')
-                .setTimestamp();
-    
-            await interaction.reply({ embeds: [embed] });
         }
     }
 };

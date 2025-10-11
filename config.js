@@ -4,12 +4,14 @@ module.exports = {
   ownerId: '895512947013611530',
   status: {
     rotateDefault: [
-      { name: '🇻🇳 Dành cho Việt Nam', type: ActivityType.Playing },
-      { name: '/help để xem lệnh', type: ActivityType.Playing },
-      { name: '🎵 {servers} servers', type: ActivityType.Watching },
+      { name: '🎵 /play để phát nhạc', type: ActivityType.Listening },
+      { name: '📊 {servers} servers', type: ActivityType.Watching },
       { name: '👥 {members} members', type: ActivityType.Watching },
-      { name: '🎶 Nhạc chất lượng cao', type: ActivityType.Listening },
-      { name: '/setup-central', type: ActivityType.Playing },
+      { name: '🎶 Music Bot chất lượng cao', type: ActivityType.Listening },
+      { name: '🎆 Boo Bot - Phục vụ cộng đồng', type: ActivityType.Playing },
+      { name: '🎸 Let the Beat Drop!', type: ActivityType.Listening },
+      { name: '✨ /help cho danh sách lệnh', type: ActivityType.Playing },
+      { name: '🎉 Sẵn sàng phục vụ!', type: ActivityType.Playing },
     ],
     songStatus: true
   },

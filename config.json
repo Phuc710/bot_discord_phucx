@@ -5,18 +5,19 @@
     "mongodbUri": "",
     "excessCommands": {
         "utility": true,
-        "other": true,
+        "other": false,
         "hentai": false,
-        "troll": true,
-        "economy" : true
+        "troll": false,
+        "economy" : true,
+        "fun": false
     },
     "categories": {
-        "media": true,
+        "media": false,
         "basic": true,
-        "utility": true,
+        "utility": false,
         "moderation": true,
         "core" :true,
-        "lavalink": true,
+        "lavalink": false,
         "music": true,
         "fun": true,
         "distube": true,

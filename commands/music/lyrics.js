@@ -70,12 +70,18 @@ module.exports = {
 
             const lines = lyrics.split('\n').map(line => line.trim()).filter(Boolean);
             
-            // Tạo embed với lời bài hát
+            // Tạo embed với lời bài hát - design mới
+            const lyricsEmojis = ['🎵', '🎶', '🎼', '🎤', '🎸', '🎹'];
+            const randomLyricsEmoji = lyricsEmojis[Math.floor(Math.random() * lyricsEmojis.length)];
+            
             const embed = new EmbedBuilder()
-                .setTitle(`🎵 Lời Bài Hát: ${trackName}`)
-                .setDescription(artistName ? `**Nghệ sĩ:** ${artistName}` : '')
-                .setColor('#DC92FF')
-                .setFooter({ text: `Yêu cầu bởi: ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() });
+                .setTitle(`${randomLyricsEmoji} Lyrics: ${trackName} 🎭`)
+                .setDescription(artistName ? `🎤 **Artist:** \`${artistName}\`\n🎵 **Let's sing along!** 🎵` : '🎵 **Ready to sing along!** 🎵')
+                .setColor('#FF6B9D')
+                .setFooter({ 
+                    text: `🎤 Sing it loud! • Requested by ${interaction.user.username}`, 
+                    iconURL: interaction.user.displayAvatarURL() 
+                });
 
             // Nếu có player và đang phát bài này, hiển thị live lyrics
             if (!query && player && player.current && player.current.info.title === trackName) {
@@ -224,26 +230,34 @@ module.exports = {
             
             const trimmedLine = line.trim();
             
-            // Thêm emoji cho các dòng đặc biệt
+            // Thêm emoji cho các dòng đặc biệt với animation
             let emoji = '';
+            let prefix = '';
+            
             if (trimmedLine.toLowerCase().includes('chorus') || trimmedLine.toLowerCase().includes('điệp khúc')) {
                 emoji = '🎵 ';
+                prefix = '**[CHORUS]** ';
             } else if (trimmedLine.toLowerCase().includes('verse') || trimmedLine.toLowerCase().includes('khổ')) {
-                emoji = '🎶 ';
+                emoji = '🎤 ';
+                prefix = '**[VERSE]** ';
             } else if (trimmedLine.toLowerCase().includes('bridge') || trimmedLine.toLowerCase().includes('cầu')) {
                 emoji = '🌉 ';
+                prefix = '**[BRIDGE]** ';
             } else if (trimmedLine.toLowerCase().includes('outro') || trimmedLine.toLowerCase().includes('kết')) {
                 emoji = '🎭 ';
+                prefix = '**[OUTRO]** ';
             } else if (trimmedLine.toLowerCase().includes('intro') || trimmedLine.toLowerCase().includes('mở đầu')) {
                 emoji = '🎪 ';
+                prefix = '**[INTRO]** ';
             } else if (trimmedLine.length > 0) {
-                // Thêm emoji ngẫu nhiên cho các dòng thường
-                const emojis = ['💫', '✨', '🌟', '💖', '💝', '💕', '💗', '💘'];
+                // Animation emojis cho các dòng thường
+                const emojis = ['💫', '✨', '🌟', '💖', '💝', '💕', '💗', '💘', '🔥', '⚡', '🎊', '🎉'];
                 emoji = emojis[index % emojis.length] + ' ';
             }
             
-            // Format với blockquote và emoji
-            return `> ${emoji}${trimmedLine}`;
+            // Format với blockquote, prefix và emoji
+            const formattedLine = prefix ? `${prefix}${trimmedLine}` : trimmedLine;
+            return `> ${emoji}${formattedLine}`;
         }).filter(line => line !== '');
         
         return formattedLines.join('\n');
