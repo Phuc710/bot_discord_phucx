@@ -150,4 +150,12 @@ const loadEventHandlers = () => {
     console.log(`${colors.yellow}Phát triển bởi: ${colors.reset}${colors.magenta}Phucx - Made with ❤️ for Vietnam${colors.reset}\n`);
 };
 
-loadEventHandlers();
+// Wait for client to be ready before loading event handlers
+if (client && typeof client.once === 'function') {
+    client.once('clientReady', () => {
+        loadEventHandlers();
+    });
+} else {
+    console.error(`${colors.red}[ LỖI ]${colors.reset} ${colors.red}Client chưa được khởi tạo đúng cách!${colors.reset}`);
+    process.exit(1);
+}
