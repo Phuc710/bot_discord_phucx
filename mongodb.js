@@ -94,6 +94,7 @@ const countingCollection = db.collection('countingame');
 const botStatusCollection = db.collection('bot_status');
 const scheduleCollection = db.collection('scheduleCollections')
 const gameAccountsCollection = db.collection('gameAccounts');
+const centralMusicCollection = db.collection('centralMusic');
 
 let giveawayCollection;
 
@@ -178,4 +179,5 @@ module.exports = {
     botStatusCollection,
     scheduleCollection,
     gameAccountsCollection,
+    centralMusicCollection,
 };

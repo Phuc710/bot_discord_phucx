@@ -102,6 +102,10 @@ const loadEventHandlers = () => {
     const afkHandler = require('./events/afkHandler');
     afkHandler(client);
     logSystem('AFK');
+    
+    const centralMusicHandler = require('./events/centralMusicHandler');
+    centralMusicHandler(client);
+    logSystem('CENTRAL MUSIC');
 
     console.log(`\n${colors.magenta}${colors.bright}🔔 HỆ THỐNG THÔNG BÁO${colors.reset}`);
     console.log('─'.repeat(45));
