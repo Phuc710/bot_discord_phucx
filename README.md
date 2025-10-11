@@ -7,7 +7,7 @@
 <h1 align="center">🎵 Boo Bot - Music & Multi-Purpose Bot</h1>
 
 <p align="center">
-  <strong>Bot Discord đa năng dành cho người Việt Nam</strong><br>
+  <strong>Bot Discord đa năng</strong><br>
   Được phát triển bởi <strong>Phucx</strong>
 </p>
 
@@ -184,7 +184,7 @@ Dự án này được phát hành dưới giấy phép MIT. Xem file [LICENSE](
 ---
 
 <p align="center">
-  <strong>🎵 Music Bot + Boo Agent • Made with ❤️ by Phucx • 2024</strong>
+  <strong>🎵 Music Bot + Boo Agent • Made with ❤️ by Phucx • 2025</strong>
 </p>
 
 <p align="center">
