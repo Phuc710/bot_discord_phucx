@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: boo-discord-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TOKEN
+        fromSecret: DISCORD_TOKEN
+      - key: MONGODB_URI
+        fromSecret: MONGODB_URI
+      - key: GEMINI_API_KEY
+        fromSecret: GEMINI_API_KEY
+      - key: CLIENT_ID
+        fromSecret: DISCORD_CLIENT_ID
+      - key: OPENWEATHER_API_KEY
+        fromSecret: OPENWEATHER_API_KEY
+      - key: MAIN_CHANNEL_ID
+        fromSecret: MAIN_CHANNEL_ID
+      - key: PHUCC_USER_ID
+        fromSecret: PHUCC_USER_ID
+      - key: GUILD_ID
+        fromSecret: GUILD_ID
