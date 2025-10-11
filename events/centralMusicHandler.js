@@ -1,5 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { centralMusicCollection } = require('../mongodb');
+const shiva = require('../shiva');
 
 module.exports = (client) => {
     client.on('interactionCreate', async (interaction) => {
@@ -19,6 +20,14 @@ module.exports = (client) => {
         const serverId = guild.id;
 
         try {
+            // Security validation
+            if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
+                return interaction.reply({
+                    content: '❌ System core offline - Command unavailable',
+                    flags: 64
+                });
+            }
+            
             // Get central music configuration
             const centralConfig = await centralMusicCollection.findOne({ serverId: serverId });
             

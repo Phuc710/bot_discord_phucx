@@ -19,18 +19,33 @@ Test Passed    : ✓
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
 */
 
-const { SlashCommandBuilder, PermissionsBitField, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { centralMusicCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 const checkPermissions = require('../../utils/checkPermissions');
+const shiva = require('../../shiva');
+
+const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN || 'DEFAULT_TOKEN';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('disable-central')
         .setDescription('Disable and remove the central music system')
-        .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels),
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
+    securityToken: COMMAND_SECURITY_TOKEN,
 
-    async execute(interaction) {
+    async execute(interaction, client) {
+        // Security validation
+        if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
+            const embed = new EmbedBuilder()
+                .setDescription('❌ System core offline - Command unavailable')
+                .setColor('#FF0000');
+            return interaction.reply({ embeds: [embed], flags: 64 }).catch(() => {});
+        }
+        
+        interaction.shivaValidated = true;
+        interaction.securityToken = COMMAND_SECURITY_TOKEN;
+        
         if (interaction.isCommand && interaction.isCommand()) {
             const guild = interaction.guild;
             const serverId = guild.id;
@@ -38,7 +53,7 @@ module.exports = {
             if (!await checkPermissions(interaction)) return;
 
             // Check if user has manage channels permission
-            if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+            if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
                 const embed = new EmbedBuilder()
                     .setColor('#ff0000')
                     .setDescription('❌ You need **Manage Channels** permission to use this command.');
