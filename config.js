@@ -4,7 +4,12 @@ module.exports = {
   ownerId: '895512947013611530',
   status: {
     rotateDefault: [
-      { name: '/help', type: ActivityType.Playing },
+      { name: '🇻🇳 Dành cho Việt Nam', type: ActivityType.Playing },
+      { name: '/help để xem lệnh', type: ActivityType.Playing },
+      { name: '🎵 {servers} servers', type: ActivityType.Watching },
+      { name: '👥 {members} members', type: ActivityType.Watching },
+      { name: '🎶 Nhạc chất lượng cao', type: ActivityType.Listening },
+      { name: '/setup-central', type: ActivityType.Playing },
     ],
     songStatus: true
   },
