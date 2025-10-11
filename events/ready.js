@@ -78,6 +78,9 @@ module.exports = {
                     console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.yellow}Không tìm thấy cấu hình status trong config.json${colors.reset}`);
                     return;
                 }
+                
+                console.log(`${colors.cyan}[ DEBUG STATUS ]${colors.reset} ${colors.cyan}Đang cập nhật status bot...${colors.reset}`);
+                console.log(`${colors.cyan}[ DEBUG STATUS ]${colors.reset} ${colors.cyan}Config status:${colors.reset}`, JSON.stringify(config.status, null, 2));
 
                 const customStatus = await getCustomStatus();
                 
@@ -117,10 +120,11 @@ module.exports = {
                     client.user.setPresence({
                         activities: [{
                             name: statusName,
-                            type: ActivityType[next.type] || ActivityType.Playing
+                            type: next.type || ActivityType.Playing
                         }],
                         status: 'online'
                     });
+                    console.log(`${colors.green}[ STATUS SET ]${colors.reset} ${colors.green}Đã đặt status: ${statusName} (${next.type})${colors.reset}`);
                     defaultIndex++;
                 } else {
                     // Fallback status
