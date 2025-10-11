@@ -20,9 +20,6 @@ require('events').defaultMaxListeners = 100;
 const loadEvents = require('./handlers/events');
 
 
-loadEvents(client);
-
-
 async function fetchExpectedCommandsCount() {
     try {
         const response = await axios.get('https://server-backend-tdpa.onrender.com/api/expected-commands-count');
@@ -111,12 +108,15 @@ require('./handlers/economyScheduler')(client);
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);
 
 client.once('clientReady', async () => {
+    // Load events first when client is ready
+    loadEvents(client);
+    
     console.log('\n' + '─'.repeat(40));
     console.log(`${colors.magenta}${colors.bright}👾  THÔNG TIN BOT${colors.reset}`);
     console.log('─'.repeat(40));
-    console.log(`${colors.red}[ LÕI BOT ]${colors.reset} ${colors.green}Tên Bot:  ${colors.reset}${client.user.tag}`);
-    console.log(`${colors.red}[ LÕI BOT ]${colors.reset} ${colors.green}Client ID: ${colors.reset}${client.user.id}`);
-    console.log(`${colors.red}[ LÕI BOT ]${colors.reset} ${colors.green}Trạng thái: ${colors.reset}✅ Đang hoạt động`);
+    console.log(`${colors.red}[ LỘI BOT ]${colors.reset} ${colors.green}Tên Bot:  ${colors.reset}${client.user.tag}`);
+    console.log(`${colors.red}[ LỘI BOT ]${colors.reset} ${colors.green}Client ID: ${colors.reset}${client.user.id}`);
+    console.log(`${colors.red}[ LỘI BOT ]${colors.reset} ${colors.green}Trạng thái: ${colors.reset}✅ Đang hoạt động`);
 
     loadLogHandlers(client);
 

@@ -150,10 +150,17 @@ const loadEventHandlers = () => {
     console.log(`${colors.yellow}Phát triển bởi: ${colors.reset}${colors.magenta}Phucx - Made with ❤️ for Vietnam${colors.reset}\n`);
 };
 
-// Wait for client to be ready before loading event handlers
-if (client && typeof client.once === 'function') {
-    client.once('clientReady', () => {
-        loadEventHandlers();
+// Load event handlers when client is ready
+// Use 'ready' event temporarily for compatibility, then switch to clientReady after bot is stable
+if (client && typeof client.on === 'function') {
+    let eventHandlersLoaded = false;
+    
+    // Try clientReady first (Discord.js v14+)
+    client.on('ready', () => {
+        if (!eventHandlersLoaded) {
+            eventHandlersLoaded = true;
+            loadEventHandlers();
+        }
     });
 } else {
     console.error(`${colors.red}[ LỖI ]${colors.reset} ${colors.red}Client chưa được khởi tạo đúng cách!${colors.reset}`);
