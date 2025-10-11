@@ -344,6 +344,12 @@ const handleButtonInteraction = async (interaction) => {
 
   const PREFIX = 'voice_control_';
   if (!interaction.customId.startsWith(PREFIX)) return;
+  
+  // Check if interaction is still valid (timeout after 3 seconds)
+  if (Date.now() - interaction.createdTimestamp > 3000) {
+    console.log('Interaction expired, skipping...');
+    return;
+  }
 
   const guild = interaction.guild;
   const userId = interaction.user.id;
@@ -351,18 +357,18 @@ const handleButtonInteraction = async (interaction) => {
   const currentVoiceChannel = member?.voice.channel;
 
   if (!currentVoiceChannel) {
-    return interaction.reply({ content: 'You must be in a voice channel to perform this action.', ephemeral: true });
+    return interaction.reply({ content: 'You must be in a voice channel to perform this action.', flags: 64 });
   }
 
   const channelId = currentVoiceChannel.id;
   const voiceChannel = await TemporaryChannelModel.findOne({ channelId });
 
   if (!voiceChannel) {
-    return interaction.reply({ content: 'This channel is not managed by the bot.', ephemeral: true });
+    return interaction.reply({ content: 'This channel is not managed by the bot.', flags: 64 });
   }
 
   if (voiceChannel.userId !== userId) {
-    return interaction.reply({ content: 'You do not have permission to manage this channel.', ephemeral: true });
+    return interaction.reply({ content: 'You do not have permission to manage this channel.', flags: 64 });
   }
 
   try {
@@ -374,7 +380,7 @@ const handleButtonInteraction = async (interaction) => {
           guild.roles.everyone,
           { Connect: false }
         );
-        await interaction.reply({ content: 'Your channel is now locked. No one else can join.', ephemeral: true });
+        await interaction.reply({ content: 'Your channel is now locked. No one else can join.', flags: 64 });
         break;
 
       case 'unlock_channel':
@@ -382,7 +388,7 @@ const handleButtonInteraction = async (interaction) => {
           guild.roles.everyone,
           { Connect: true }
         );
-        await interaction.reply({ content: 'Your channel is now unlocked. Anyone can join.', ephemeral: true });
+        await interaction.reply({ content: 'Your channel is now unlocked. Anyone can join.', flags: 64 });
         break;
 
       case 'ghost_channel':
@@ -390,7 +396,7 @@ const handleButtonInteraction = async (interaction) => {
           guild.roles.everyone,
           { ViewChannel: false }
         );
-        await interaction.reply({ content: 'Your channel is now ghosted. Only members already in the channel can see it.', ephemeral: true });
+        await interaction.reply({ content: 'Your channel is now ghosted. Only members already in the channel can see it.', flags: 64 });
         break;
 
       case 'reveal_channel':
@@ -591,7 +597,15 @@ const handleButtonInteraction = async (interaction) => {
     }
   } catch (error) {
     console.error('Error handling button interaction:', error);
-    await interaction.reply({ content: 'An error occurred while processing your request.', ephemeral: true });
+    try {
+      if (!interaction.replied && !interaction.deferred) {
+        await interaction.reply({ content: 'An error occurred while processing your request.', flags: 64 });
+      } else if (interaction.deferred) {
+        await interaction.editReply({ content: 'An error occurred while processing your request.' });
+      }
+    } catch (replyError) {
+      console.error('Failed to send error message:', replyError);
+    }
   }
 };
 
