@@ -4,7 +4,7 @@ const colors = require('../UI/colors/colors');
 const config = require('../config'); // Sử dụng config.js
 
 module.exports = {
-    name: 'clientReady',
+    name: 'ready',
     once: true,
     async execute(client) {
         console.log('\n' + '─'.repeat(45));
