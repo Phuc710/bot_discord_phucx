@@ -9,7 +9,7 @@ module.exports = {
   status: {
     rotateDefault: [
       {
-        name: "Cùng lăng nghe || /help",
+        name: "Cùng lắng nghe || /help",
         type: "Playing"
       }
     ],

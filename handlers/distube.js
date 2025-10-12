@@ -25,7 +25,7 @@ module.exports = async (client) => {
                 });
             } else {
                 // Set default status when no music is playing
-                const defaultStatus = config.status.rotateDefault[0] || { name: "Cùng lăng nghe || /help", type: "Playing" };
+                const defaultStatus = config.status.rotateDefault[0] || { name: "Cùng lắng nghe || /help", type: "Playing" };
                 client.user.setPresence({
                     activities: [{
                         name: defaultStatus.name,

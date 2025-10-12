@@ -143,7 +143,7 @@ module.exports = {
                     // Fallback status
                     client.user.setPresence({
                         activities: [{
-                            name: '🇻🇳 Boo Bot - Dành cho Việt Nam',
+                            name: 'Cùng lắng nghe || /help',
                             type: ActivityType.Playing
                         }],
                         status: 'online'
@@ -155,7 +155,7 @@ module.exports = {
                 try {
                     client.user.setPresence({
                         activities: [{
-                            name: '🚀 Boo Bot Online',
+                            name: 'Cùng lắng nghe || /help',
                             type: ActivityType.Playing
                         }],
                         status: 'online'
