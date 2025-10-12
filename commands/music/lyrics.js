@@ -41,7 +41,7 @@ module.exports = {
                         .setColor('#FF0000')
                         .setTitle('❌ Không Có Bài Hát Đang Phát')
                         .setDescription('Không có bài hát nào đang phát.\nSử dụng `/play` để phát nhạc hoặc nhập tên bài hát vào option `query`.')
-                        .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                        .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                 
                     const reply = await interaction.editReply({ embeds: [errorEmbed] });
                     setTimeout(() => reply.delete().catch(() => {}), 5000);
@@ -61,7 +61,7 @@ module.exports = {
                     .setColor('#FF0000')
                     .setTitle('❌ Không Tìm Thấy Lời Bài Hát')
                     .setDescription(`Không thể tìm thấy lời bài hát cho: **${trackName}**${artistName ? ` - ${artistName}` : ''}\n\n**Mẹo:**\n- Thử nhập tên bài hát chính xác hơn\n- Bao gồm tên nghệ sĩ\n- Kiểm tra chính tả`)
-                    .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                    .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                 
                 const reply = await interaction.editReply({ embeds: [errorEmbed] });
                 setTimeout(() => reply.delete().catch(() => {}), 8000);
@@ -151,7 +151,7 @@ module.exports = {
                 .setColor('#FF0000')
                 .setTitle('❌ Đã Xảy Ra Lỗi')
                 .setDescription('Có lỗi xảy ra khi thực hiện lệnh. Vui lòng thử lại sau.')
-                .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
             
             const reply = await interaction.editReply({ embeds: [errorEmbed] });
             setTimeout(() => reply.delete().catch(() => {}), 3000);

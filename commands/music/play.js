@@ -147,7 +147,7 @@ module.exports = {
                         .setColor('#FF0000')
                         .setTitle('❌ Lỗi Spotify')
                         .setDescription('Không thể xử lý Spotify link. Vui lòng kiểm tra thông tin Spotify hoặc thử link khác.')
-                        .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                        .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                     
                     const reply = await interaction.editReply({ embeds: [errorEmbed] });
                     setTimeout(() => reply.delete().catch(() => {}), 5000);
@@ -164,7 +164,7 @@ module.exports = {
                         .setColor('#FF0000')
                         .setTitle('❌ Nội Dung Không Hỗ Trợ')
                         .setDescription('YouTube mixes hiện tại không được hỗ trợ.\nVui lòng sử dụng track hoặc playlist khác.')
-                        .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                        .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                 
                     const reply = await interaction.editReply({ embeds: [mixEmbed] });
                     setTimeout(() => reply.delete().catch(() => {}), 3000);
@@ -177,7 +177,7 @@ module.exports = {
                         .setColor('#FF0000')
                         .setTitle('❌ Không Tìm Thấy Kết Quả')
                         .setDescription('Không thể tìm thấy track nào phù hợp với truy vấn của bạn.\nThử sửa đổi tìm kiếm.')
-                        .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                        .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                 
                     const reply = await interaction.editReply({ embeds: [noResultsEmbed] });
                     setTimeout(() => reply.delete().catch(() => {}), 3000);
@@ -232,7 +232,7 @@ module.exports = {
                         .setColor('#FF0000')
                         .setTitle('❌ Không Tìm Thấy Kết Quả')
                         .setDescription('Không thể tìm thấy track nào phù hợp với truy vấn của bạn.\nThử sửa đổi tìm kiếm.')
-                        .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                        .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
                 
                     const reply = await interaction.editReply({ embeds: [noResultsEmbed] });
                     setTimeout(() => reply.delete().catch(() => {}), 3000);
@@ -265,7 +265,7 @@ module.exports = {
                 .setColor('#FF0000')
                 .setTitle('❌ Đã Xảy Ra Lỗi')
                 .setDescription('Có gì đó sai khi xử lý yêu cầu của bạn.\n\n**Mẹo:**\n- Thử thay đổi Lavalink trong config.\n- Kiểm tra URL track/playlist.')
-                .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon })
+                .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon })
                 .setTimestamp();
         
             const reply = await interaction.editReply({ embeds: [errorEmbed] });

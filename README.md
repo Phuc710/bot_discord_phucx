@@ -1,10 +1,10 @@
-# 🤖 Boo Bot - Discord All-in-One Bot
+# 🤖 PHUCX Bot - Discord All-in-One Bot
 
 <p align="center">
   <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTNyeGRzcjhodGJrajRiZWk5dnd4cHZhdDFtdDJsNjFnajVrNGZtZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vLZJfnIqxLla26Gr4i/giphy.gif" alt="Boo Bot" width="300">
 </p>
 
-<h1 align="center">🎵 Boo Bot - Music & Multi-Purpose Bot</h1>
+<h1 align="center">🎵 PHUCX Bot - Music & Multi-Purpose Bot</h1>
 
 <p align="center">
   <strong>Bot Discord đa năng</strong><br>

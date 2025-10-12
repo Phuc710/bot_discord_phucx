@@ -2,18 +2,18 @@
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
                                                  
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
+  _____  _    _ _    _  _____  _    _ 
+ |  __ \| |  | | |  | |/ ____|| |  | |
+ | |__) | |__| | |  | | |     | |  | |
+ |  ___/|  __  | |  | | |     | |  | |
+ | |    | |  | | |__| | |____ | |__| |
+ |_|    |_|  |_|\____/ \_____| \____/ 
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/cc9U4w6a                   
+YouTube : https://www.youtube.com/@PhucxDev                         
 
 Command Verified : ✓  
-Website        : ssrr.tech  
+Website        : phucdev.xo.je  
 Test Passed    : ✓
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
@@ -23,29 +23,29 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder
 const { centralMusicCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 const checkPermissions = require('../../utils/checkPermissions');
-const shiva = require('../../shiva');
+const phucx = require('../../phucx');
 
-const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN || 'DEFAULT_TOKEN';
+const COMMAND_SECURITY_TOKEN = phucx.SECURITY_TOKEN || 'DEFAULT_TOKEN';
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup-central')
-        .setDescription('Setup the central music system in current channel')
+        .setDescription('Thiết lập hệ thống nhạc tập trung - gõ tên bài hát là bot phát nhạc')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
         .addChannelOption(option =>
             option.setName('voice-channel')
-                .setDescription('The voice channel for music playback')
+                .setDescription('Voice channel để phát nhạc')
                 .setRequired(true)
                 .addChannelTypes(ChannelType.GuildVoice))
         .addIntegerOption(option =>
             option.setName('volume')
-                .setDescription('Default volume for music playback (1-100)')
+                .setDescription('Âm lượng mặc định (1-100)')
                 .setRequired(false)
                 .setMinValue(1)
                 .setMaxValue(100))
         .addRoleOption(option =>
             option.setName('allowed-role')
-                .setDescription('Role allowed to use music controls (leave empty for @everyone)')
+                .setDescription('Role được quyền sử dụng (để trống cho @everyone)')
                 .setRequired(false)),
 
     async execute(interaction, client) {
@@ -62,17 +62,38 @@ module.exports = {
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
                 const embed = new EmbedBuilder()
                     .setColor('#ff0000')
-                    .setDescription('❌ You need **Manage Channels** permission to use this command.');
+                    .setDescription('❌ Bạn cần quyền **Manage Channels** để sử dụng lệnh này.');
                 return interaction.reply({ embeds: [embed], flags: 64 });
             }
 
             try {
                 // Create the central music panel embed
                 const centralEmbed = new EmbedBuilder()
-                    .setTitle('🎵 Central Music Control Panel')
-                    .setDescription(`**Voice Channel:** ${voiceChannel}\n**Default Volume:** ${volume}%\n**Allowed Role:** ${allowedRole ? allowedRole : '@everyone'}\n\n**Status:** ⏸️ No music playing`)
+                    .setAuthor({ 
+                        name: '🎵 Boo Music Control Center', 
+                        iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif',
+                        url: 'https://discord.gg/cc9U4w6a' 
+                    })
+                    .setDescription([
+                        '',
+                        '🎵 **Hệ thống nhạc tập trung**',
+                        '',
+                        `🎤 **Voice Channel:** ${voiceChannel}`,
+                        `🔊 **Âm lượng mặc định:** ${volume}%`,
+                        `👥 **Role được phép:** ${allowedRole ? allowedRole : '@everyone'}`,
+                        '',
+                        '💡 **Cách sử dụng:**',
+                        '• Gõ **tên bài hát** hoặc **link YouTube**',
+                        '• Bot sẽ tự động phát nhạc ngay lập tức',
+                        '• ✅ **Reaction xanh** = Phát thành công',
+                        '• ❌ **Reaction đỏ** = Có lỗi',
+                        '• Thông báo thông minh về bài hát tiếp theo',
+                        '• **Không xóa** tin nhắn của bạn nữa!',
+                        '',
+                        '✨ *Sẵn sàng lấp đầy nơi này với âm nhạc tuyệt vời chưa?*'
+                    ].join('\n'))
                     .setColor('#00c3ff')
-                    .setFooter({ text: 'Boo Music Bot - Central System', iconURL: interaction.client.user.displayAvatarURL() })
+                    .setFooter({ text: 'PHUCX Music Bot - Central System', iconURL: interaction.client.user.displayAvatarURL() })
                     .setTimestamp();
 
                 // Create control buttons
@@ -162,9 +183,23 @@ module.exports = {
 
                 // Send success message
                 const successEmbed = new EmbedBuilder()
+                    .setTitle('🎵 Hệ Thống Nhạc Tập Trung Đã Sẵn Sàng!')
+                    .setDescription(
+                        `**Hệ thống nhạc tập trung đã được thiết lập!**\n\n` +
+                        `🎯 **Cách sử dụng:**\n` +
+                        `• Gõ tên bài hát hoặc link YouTube\n` +
+                        `• Bot sẽ tự động phát nhạc\n` +
+                        `• ✅ Reaction xanh = Phát thành công\n` +
+                        `• ❌ Reaction đỏ = Lỗi\n` +
+                        `• Thông báo thông minh về bài hát tiếp theo\n` +
+                        `• Không xóa tin nhắn của bạn nữa!\n\n` +
+                        `🎵 **Voice Channel:** ${voiceChannel}\n` +
+                        `🔊 **Âm lượng:** ${volume}%\n` +
+                        `👥 **Role được phép:** ${allowedRole ? allowedRole : '@everyone'}\n` +
+                        `📍 **Control Panel:** Ở trên tin nhắn này`
+                    )
                     .setColor('#00ff00')
-                    .setDescription(`✅ **Central Music System Setup Complete!**\n\n🎵 **Voice Channel:** ${voiceChannel}\n📊 **Volume:** ${volume}%\n👥 **Allowed Role:** ${allowedRole ? allowedRole : '@everyone'}\n📍 **Control Panel:** Above this message\n\n*Use the buttons above to control music playback!*`)
-                    .setFooter({ text: 'Central system is now active', iconURL: cmdIcons.correctIcon });
+                    .setFooter({ text: 'Hệ thống đã hoạt động', iconURL: cmdIcons.correctIcon });
 
                 await interaction.followUp({ embeds: [successEmbed], flags: 64 });
 

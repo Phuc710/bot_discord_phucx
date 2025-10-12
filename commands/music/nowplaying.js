@@ -20,7 +20,7 @@ module.exports = {
                     .setColor('#FF0000')
                     .setTitle('❌ Không Có Player Hoạt Động')
                     .setDescription('Không có music player nào đang hoạt động trong server này.\nSử dụng `/play` để bắt đầu phát nhạc.')
-                    .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                    .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
             
                 const reply = await interaction.editReply({ embeds: [noPlayerEmbed] });
                 setTimeout(() => reply.delete().catch(() => {}), 3000);
@@ -33,7 +33,7 @@ module.exports = {
                     .setColor('#FF0000')
                     .setTitle('❌ Không Có Track Đang Phát')
                     .setDescription('Không có track nào đang phát.\nSử dụng `/play` để thêm bài hát vào hàng đợi.')
-                    .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                    .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
             
                 const reply = await interaction.editReply({ embeds: [noTrackEmbed] });
                 setTimeout(() => reply.delete().catch(() => {}), 3000);
@@ -63,7 +63,7 @@ module.exports = {
                     { name: '👤 Requested by', value: `<@${currentTrack.requester?.id || interaction.user.id}>`, inline: true }
                 )
                 .setFooter({ 
-                    text: '🎼 Let the Beat Drop! • Boo Music Bot', 
+                    text: '🎼 Let the Beat Drop! • PHUCX Music Bot',
                     iconURL: interaction.client.user.displayAvatarURL() 
                 });
             
@@ -79,7 +79,7 @@ module.exports = {
                 .setColor('#FF0000')
                 .setTitle('❌ Đã Xảy Ra Lỗi')
                 .setDescription('Có lỗi xảy ra khi thực hiện lệnh. Vui lòng thử lại sau.')
-                .setFooter({ text: 'All In One Music', iconURL: musicIcons.alertIcon });
+                .setFooter({ text: 'PHUCX Music Bot', iconURL: musicIcons.alertIcon });
             
             const reply = await interaction.editReply({ embeds: [errorEmbed] });
             setTimeout(() => reply.delete().catch(() => {}), 3000);

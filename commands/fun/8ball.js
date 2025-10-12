@@ -2,18 +2,18 @@
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
                                                  
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
+  _____  _    _ _    _  _____  _    _ 
+ |  __ \| |  | | |  | |/ ____|| |  | |
+ | |__) | |__| | |  | | |     | |  | |
+ |  ___/|  __  | |  | | |     | |  | |
+ | |    | |  | | |__| | |____ | |__| |
+ |_|    |_|  |_|\____/ \_____| \____/ 
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/cc9U4w6a                   
+YouTube : https://www.youtube.com/@PhucxDev                         
 
 Command Verified : ✓  
-Website        : ssrr.tech  
+Website        : phucdev.xo.je  
 Test Passed    : ✓
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
@@ -26,121 +26,76 @@ const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('8ball')
-        .setDescription('Ask the magic 8-ball a question')
+        .setDescription('Hỏi quả cầu thần số 8 một câu hỏi')
         .addStringOption(option => 
             option.setName('question')
-                .setDescription('The question you want to ask')
+                .setDescription('Câu hỏi bạn muốn hỏi')
                 .setRequired(true)),
     
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
         const responses = [
-            "🎱 It is certain.",
-            "🎱 It is decidedly so.",
-            "🎱 Without a doubt.",
-            "🎱 Yes – definitely.",
-            "🎱 You may rely on it.",
-            "🎱 As I see it, yes.",
-            "🎱 Most likely.",
-            "🎱 Outlook good.",
-            "🎱 Yes.",
-            "🎱 Signs point to yes.",
-            "🎱 Absolutely.",
-            "🎱 Certainly.",
-            "🎱 Sure thing.",
-            "🎱 Of course.",
-            "🎱 Definitely.",
-            "🎱 For sure.",
-            "🎱 Yes, indeed.",
-            "🎱 You got it.",
-            "🎱 Affirmative.",
-            "🎱 Positively.",
-            "🎱 Unquestionably.",
-            "🎱 Indubitably.",
-            "🎱 Sure.",
-            "🎱 Yes, for certain.",
-            "🎱 It looks good.",
-            "🎱 Most certainly.",
-            "🎱 Indeed.",
-            "🎱 Yep.",
-            "🎱 Naturally.",
-            "🎱 Without hesitation.",
-            "🎱 Definitely yes.",
-            "🎱 All signs say yes.",
-            "🎱 Certainly so.",
-            "🎱 Absolutely yes.",
-            "🎱 For sure yes.",
-            "🎱 Most positively.",
-            "🎱 Undoubtedly yes.",
-            "🎱 Beyond a doubt.",
-            "🎱 Yes, clearly.",
-            "🎱 Yes, undoubtedly.",
-            "🎱 Yes, without question.",
-            "🎱 Yes, without a doubt.",
-            "🎱 Yes, most assuredly.",
-            "🎱 Yes, most definitely.",
-            "🎱 Yes, absolutely.",
-            "🎱 Yes, for sure.",
-            "🎱 Yes, certainly.",
-            "🎱 Yes, indeed.",
-            "🎱 Yes, naturally.",
-            "🎱 Yes, unquestionably.",
-            "🎱 Reply hazy, try again.",
-            "🎱 Ask again later.",
-            "🎱 Better not tell you now.",
-            "🎱 Cannot predict now.",
-            "🎱 Concentrate and ask again.",
-            "🎱 Don't count on it.",
-            "🎱 My reply is no.",
-            "🎱 My sources say no.",
-            "🎱 Outlook not so good.",
-            "🎱 Very doubtful.",
-            "🎱 No way.",
-            "🎱 I don't think so.",
-            "🎱 Definitely not.",
-            "🎱 Not a chance.",
-            "🎱 No.",
-            "🎱 Absolutely not.",
-            "🎱 Certainly not.",
-            "🎱 No, indeed.",
-            "🎱 No, for sure.",
-            "🎱 No, absolutely.",
-            "🎱 No, undoubtedly.",
-            "🎱 No, most assuredly.",
-            "🎱 No, most definitely.",
-            "🎱 No, most certainly.",
-            "🎱 No, unquestionably.",
-            "🎱 No, without question.",
-            "🎱 No, without a doubt.",
-            "🎱 No, indubitably.",
-            "🎱 No, absolutely not.",
-            "🎱 No, for certain.",
-            "🎱 No, definitely not.",
-            "🎱 No, beyond a doubt.",
-            "🎱 No, clearly not.",
-            "🎱 No, most assuredly not.",
-            "🎱 No, without hesitation.",
-            "🎱 No, certainly not.",
-            "🎱 No, positively not.",
-            "🎱 No, indubitably not.",
-            "🎱 No, unquestionably not.",
-            "🎱 No, indeed not.",
-            "🎱 No, for sure not.",
-            "🎱 No, most certainly not.",
-            "🎱 No, undoubtedly not.",
-            "🎱 No, most definitely not.",
-            "🎱 No, absolutely not."
+            // Câu trả lời tích cực
+            "🏆 Chắc chắn rồi!",
+            "🏆 Không có nghi ngờ gì cả.",
+            "🏆 Tất nhiên là có.",
+            "🏆 Bạn có thể tin tưởng vào điều đó.",
+            "🏆 Theo tôi thấy thì có.",
+            "🏆 Có khả năng cao.",
+            "🏆 Triển vọng tốt.",
+            "🏆 Có, chắc chắn.",
+            "🏆 Dấu hiệu chỉ ra là có.",
+            "🏆 Đáp án là có.",
+            "🏆 Tất nhiên rồi!",
+            "🏆 Đúng vậy!",
+            "🏆 Triển thôi!",
+            "🏆 Gó!",
+            "🏆 Cắt đi luôn!",
+            
+            // Câu trả lời trung tính
+            "🟡 Hỏi lại sau đi.",
+            "🟡 Không thể dự đoán được bây giờ.",
+            "🟡 Tốt hơn là đừng nói cho bạn bây giờ.",
+            "🟡 Không thể đoán được.",
+            "🟡 Hãy tập trung và hỏi lại.",
+            "🟡 Hơi khó nói...",
+            "🟡 Có thể có, có thể không.",
+            "🟡 Hãy suy nghĩ lại đi.",
+            "🟡 Chưa rõ lắm...",
+            "🟡 Thử hỏi theo cách khác xem.",
+            "🟡 Chưa thể kết luận.",
+            "🟡 Tùy tình huống thôi.",
+            "🟡 Để mà xem...",
+            
+            // Câu trả lời tiêu cực  
+            "🔴 Đừng mơ nữa.",
+            "🔴 Câu trả lời của tôi là không.",
+            "🔴 Các nguồn tin của tôi nói không.",
+            "🔴 Triển vọng không tốt lắm.",
+            "🔴 Rất khó xảy ra.",
+            "🔴 Không đâu.",
+            "🔴 Không có khả năng.",
+            "🔴 Chắc chắn là không.",
+            "🔴 Tôi nghĩ là không.",
+            "🔴 Khả năng rất thấp.",
+            "🔴 Không thể nào!",
+            "🔴 Đừng có mơ!",
+            "🔴 Tuyệt đối không!",
+            "🔴 Quên đi!"
         ];
 
         const question = interaction.options.getString('question');
         const response = responses[Math.floor(Math.random() * responses.length)];
 
         const embed = new EmbedBuilder()
-            .setColor('#0099ff')
-            .setTitle('🎱 The Magic 8-Ball')
-            .setDescription(`**Question:** ${question}\n**Answer:** ${response}`)
+            .setColor('#4B0082')
+            .setTitle('🎱 Quả Cầu Thần Số 8')
+            .addFields(
+                { name: '❓ Câu hỏi:', value: `*${question}*`, inline: false },
+                { name: '🔮 Câu trả lời:', value: `**${response}**`, inline: false }
+            )
             .setTimestamp()
-            .setFooter({ text: 'Magic 8-Ball' });
+            .setFooter({ text: `Yêu cầu bởi: ${interaction.user.username} • Boo Magic 8Ball`, iconURL: interaction.user.displayAvatarURL() });
 
         await interaction.reply({ embeds: [embed] });
     } else {

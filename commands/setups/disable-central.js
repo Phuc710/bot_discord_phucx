@@ -2,18 +2,18 @@
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
                                                  
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
+  _____  _    _ _    _  _____  _    _ 
+ |  __ \| |  | | |  | |/ ____|| |  | |
+ | |__) | |__| | |  | | |     | |  | |
+ |  ___/|  __  | |  | | |     | |  | |
+ | |    | |  | | |__| | |____ | |__| |
+ |_|    |_|  |_|\____/ \_____| \____/ 
                     
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
+DISCORD :  https://discord.gg/cc9U4w6a                   
+YouTube : https://www.youtube.com/@PhucxDev                         
 
 Command Verified : ✓  
-Website        : ssrr.tech  
+Website        : phucdev.xo.je  
 Test Passed    : ✓
 
 ☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
@@ -23,9 +23,9 @@ const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder
 const { centralMusicCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
 const checkPermissions = require('../../utils/checkPermissions');
-const shiva = require('../../shiva');
+const phucx = require('../../phucx');
 
-const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN || 'DEFAULT_TOKEN';
+const COMMAND_SECURITY_TOKEN = phucx.SECURITY_TOKEN || 'DEFAULT_TOKEN';
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,14 +36,14 @@ module.exports = {
 
     async execute(interaction, client) {
         // Security validation
-        if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
+        if (!phucx || !phucx.validateCore || !phucx.validateCore()) {
             const embed = new EmbedBuilder()
                 .setDescription('❌ System core offline - Command unavailable')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], flags: 64 }).catch(() => {});
         }
         
-        interaction.shivaValidated = true;
+        interaction.phucxValidated = true;
         interaction.securityToken = COMMAND_SECURITY_TOKEN;
         
         if (interaction.isCommand && interaction.isCommand()) {

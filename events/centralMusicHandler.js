@@ -1,6 +1,6 @@
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { centralMusicCollection } = require('../mongodb');
-const shiva = require('../shiva');
+const phucx = require('../phucx');
 
 module.exports = (client) => {
     client.on('interactionCreate', async (interaction) => {
@@ -21,7 +21,7 @@ module.exports = (client) => {
 
         try {
             // Security validation
-            if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
+            if (!phucx || !phucx.validateCore || !phucx.validateCore()) {
                 return interaction.reply({
                     content: '❌ System core offline - Command unavailable',
                     flags: 64

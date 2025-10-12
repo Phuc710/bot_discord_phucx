@@ -26,7 +26,7 @@ if (majorVersion < 16) {
 require('dotenv').config();
 
 const client = require('./main');
-require('./shiva');
+require('./phucx');
 
 const loadEventHandlers = () => {
     const colors = require('./UI/colors/colors');
@@ -106,6 +106,10 @@ const loadEventHandlers = () => {
     const centralMusicHandler = require('./events/centralMusicHandler');
     centralMusicHandler(client);
     logSystem('CENTRAL MUSIC');
+    
+    const centralMusicAutoPlay = require('./events/centralMusicAutoPlay');
+    centralMusicAutoPlay(client);
+    logSystem('CENTRAL AUTO-PLAY');
 
     console.log(`\n${colors.magenta}${colors.bright}🔔 HỆ THỐNG THÔNG BÁO${colors.reset}`);
     console.log('─'.repeat(45));
@@ -134,7 +138,7 @@ const loadEventHandlers = () => {
     require('./events/music')(client);
     logSystem('LAVALINK - ÂM NHẠC CHẤT LƯỢNG CAO');
 
-    require('./shiva');
+    require('./phucx');
     console.log(`\n${colors.magenta}${colors.bright}🎵 HỆ THỐNG DISTUBE${colors.reset}`);
     require('./handlers/distube')(client);
     logSystem('DISTUBE - PHÁT NHẠC ĐA NĂNG');
