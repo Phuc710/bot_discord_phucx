@@ -129,24 +129,42 @@ module.exports = (client) => {
 
                 // Tạo embed thông báo thông minh
                 const trackEmbed = new EmbedBuilder()
-                    .setAuthor({ 
-                        name: `${track.info.title}`, 
-                        iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif',
-                        url: 'https://discord.gg/cc9U4w6a' 
-                    })
-                    .setDescription([
-                        `**🎤 Nghệ sĩ:** ${track.info.author || 'Unknown'}`,
-                        `**👤 Yêu cầu bởi:** <@${message.author.id}>`,
-                        '',
-                        `⏰ **Thời lượng:** \`${formatDuration(track.info.length)}\``,
-                        `🔊 **Âm lượng:** \`${player.volume || 50}%\``,
-                        '',
-                        player.queue.length > 1 ? 
-                            `📃 **Vị trí trong hàng đợi:** \`#${player.queue.length}\`` : 
-                            '🎶 *Đang phát ngay bây giờ!*',
-                        '',
-                        '🎶 *Thích không? Gõ thêm tên bài hát để tiếp tục!*'
-                    ].join('\n'))
+                    .setTitle('🎵 Bài Hát Đã Được Thêm')
+                    .setDescription(`**${track.info.title}**`)
+                    .addFields(
+                        {
+                            name: '🎤 Nghệ sĩ',
+                            value: track.info.author || 'Unknown',
+                            inline: true
+                        },
+                        {
+                            name: '👤 Yêu cầu bởi',
+                            value: `<@${message.author.id}>`,
+                            inline: true
+                        },
+                        {
+                            name: '⏰ Thời lượng',
+                            value: formatDuration(track.info.length),
+                            inline: true
+                        },
+                        {
+                            name: '🔊 Âm lượng',
+                            value: `${player.volume || 50}%`,
+                            inline: true
+                        },
+                        {
+                            name: '🎶 Trạng thái',
+                            value: player.queue.length > 1 ? 
+                                `Vị trí trong hàng đợi: #${player.queue.length}` : 
+                                '🎶 **Đang phát ngay bây giờ!**',
+                            inline: false
+                        },
+                        {
+                            name: '💡 Mẹo',
+                            value: '🎶 **Thích không? Gõ thêm tên bài hát để tiếp tục!**',
+                            inline: false
+                        }
+                    )
                     .setColor('#00c3ff')
                     .setFooter({ 
                         text: 'Boo Music Bot - Central System', 

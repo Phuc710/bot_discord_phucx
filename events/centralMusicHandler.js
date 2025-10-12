@@ -235,15 +235,50 @@ module.exports = (client) => {
                     
                     const track = player.current;
                     const nowPlayingEmbed = new EmbedBuilder()
-                        .setTitle('🎶 Now Playing')
-                        .setDescription(`**${track.info.title}**\nby ${track.info.author}`)
-                        .addFields([
-                            { name: 'Duration', value: formatTime(track.info.length), inline: true },
-                            { name: 'Volume', value: `${player.volume}%`, inline: true },
-                            { name: 'Loop', value: player.loop === 'track' ? '🔂 Track' : player.loop === 'queue' ? '🔁 Queue' : '▶️ None', inline: true }
-                        ])
+                        .setTitle('🎵 Now Playing')
+                        .setDescription(`**${track.info.title}**`)
+                        .addFields(
+                            {
+                                name: '🎤 Nghệ sĩ',
+                                value: track.info.author || 'Unknown',
+                                inline: true
+                            },
+                            {
+                                name: '👤 Yêu cầu bởi',
+                                value: track.requester ? `<@${track.requester.id}>` : 'Unknown',
+                                inline: true
+                            },
+                            {
+                                name: '⏰ Thời lượng',
+                                value: formatTime(track.info.length),
+                                inline: true
+                            },
+                            {
+                                name: '🔊 Âm lượng',
+                                value: `${player.volume}%`,
+                                inline: true
+                            },
+                            {
+                                name: '🔁 Loop Mode',
+                                value: player.loop === 'track' ? '🔂 Track' : player.loop === 'queue' ? '🔁 Queue' : '▶️ None',
+                                inline: true
+                            },
+                            {
+                                name: '📃 Queue Position',
+                                value: player.queue.length > 0 ? `${player.queue.length} tracks remaining` : 'Empty',
+                                inline: true
+                            }
+                        )
                         .setColor('#00c3ff')
-                        .setThumbnail(track.info.artworkUrl || null);
+                        .setFooter({ 
+                            text: 'Boo Music Bot - Central System', 
+                            iconURL: client.user.displayAvatarURL() 
+                        })
+                        .setTimestamp();
+                        
+                    if (track.info.artwork || track.info.artworkUrl) {
+                        nowPlayingEmbed.setThumbnail(track.info.artwork || track.info.artworkUrl);
+                    }
                     
                     await interaction.reply({ embeds: [nowPlayingEmbed], flags: 64 });
                     break;
