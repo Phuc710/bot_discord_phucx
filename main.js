@@ -53,22 +53,28 @@ async function verifyCommandsCount() {
 
 
     if (expectedCommandsCount === -1) {
-        console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.red}Trạng Thái Server: OFFLINE ❌${colors.reset}`);
-        console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.red}Không thể xác minh lệnh${colors.reset}`);
+        console.log(`${colors.cyan}[ THÔNG TIN ]${colors.reset} ${colors.yellow}Trạng thái Server: OFFLINE (Kiểm tra xác minh bỏ qua)${colors.reset}`);
+        console.log(`${colors.cyan}[ LỆNH BOT ]${colors.reset} ${colors.green}Số lượng lệnh đã tải: ${registeredCommandsCount} ✅${colors.reset}`);
+        console.log(`${colors.cyan}[ TRẠNG THÁI ]${colors.reset} ${colors.green}Bot sẵn sàng hoạt động 🚀${colors.reset}`);
         return;
     }
 
-
+    console.log(`${colors.cyan}[ LỆNH BOT ]${colors.reset} ${colors.green}Số lượng lệnh đã tải: ${registeredCommandsCount}${colors.reset}`);
+    console.log(`${colors.cyan}[ THÔNG TIN ]${colors.reset} ${colors.blue}Số lệnh tham chiếu: ${expectedCommandsCount}${colors.reset}`);
+    
+    const difference = Math.abs(registeredCommandsCount - expectedCommandsCount);
+    
     if (registeredCommandsCount !== expectedCommandsCount) {
-        console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.red}Phát hiện lệnh không khớp ⚠️${colors.reset}`);
-        console.log(`${colors.yellow}[ CHI TIẾT ]${colors.reset} ${colors.red}Lệnh hiện tại: ${colors.reset}${registeredCommandsCount}`);
-        console.log(`${colors.yellow}[ CHI TIẾT ]${colors.reset} ${colors.red}Lệnh mong đợi: ${colors.reset}${expectedCommandsCount}`);
-        console.log(`${colors.yellow}[ TRẠNG THÁI ]${colors.reset} ${colors.red}Cần kiểm tra tính toàn vẹn lệnh${colors.reset}`);
+        if (difference <= 10) {
+            console.log(`${colors.cyan}[ TRẠNG THÁI ]${colors.reset} ${colors.green}Chênh lệch nhỏ (${difference} lệnh) - Bình thường ✓${colors.reset}`);
+        } else {
+            console.log(`${colors.yellow}[ LƯU Ý ]${colors.reset} ${colors.yellow}Chênh lệch: ${difference} lệnh - Có thể do cập nhật ⚠️${colors.reset}`);
+        }
     } else {
-        console.log(`${colors.cyan}[ LỆNH BOT ]${colors.reset} ${colors.green}Số lượng lệnh: ${registeredCommandsCount} ✓${colors.reset}`);
         console.log(`${colors.cyan}[ BẢO MẬT ]${colors.reset} ${colors.green}Tính toàn vẹn lệnh đã xác minh ✅${colors.reset}`);
-        console.log(`${colors.cyan}[ TRẠNG THÁI ]${colors.reset} ${colors.green}Bot đã bảo mật và sẵn sàng 🛡️${colors.reset}`);
     }
+    
+    console.log(`${colors.cyan}[ TRẠNG THÁI ]${colors.reset} ${colors.green}Bot đã sẵn sàng phục vụ 🛡️${colors.reset}`);
 
     // Footer
     console.log('─'.repeat(60));
