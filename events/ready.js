@@ -55,20 +55,36 @@ module.exports = {
         }
 
         async function getCurrentSongActivity() {
-            // Check if Riffy is initialized
-            if (!client.riffy || !client.riffy.players) return null;
-            
-            const activePlayers = Array.from(client.riffy.players.values()).filter(player => player.playing);
+            // Check for Riffy music player
+            if (client.riffy && client.riffy.players) {
+                const activePlayers = Array.from(client.riffy.players.values()).filter(player => player.playing);
+                if (activePlayers.length > 0) {
+                    const player = activePlayers[0];
+                    if (player.current?.info?.title) {
+                        return {
+                            name: `🎸 ${player.current.info.title}`,
+                            type: ActivityType.Playing
+                        };
+                    }
+                }
+            }
 
-            if (!activePlayers.length) return null;
+            // Check for DisTube music player
+            if (client.distube && client.distube.queues) {
+                const activeQueues = Array.from(client.distube.queues.values()).filter(queue => queue.playing);
+                if (activeQueues.length > 0) {
+                    const queue = activeQueues[0];
+                    if (queue.songs && queue.songs[0]) {
+                        const currentSong = queue.songs[0];
+                        return {
+                            name: `🎵 ${currentSong.name}`,
+                            type: ActivityType.Listening
+                        };
+                    }
+                }
+            }
 
-            const player = activePlayers[0];
-            if (!player.current?.info?.title) return null;
-
-            return {
-                name: `🎸 ${player.current.info.title}`,
-                type: ActivityType.Playing
-            };
+            return null;
         }
 
         async function updateStatus() {
@@ -80,6 +96,15 @@ module.exports = {
                 }
                 
 
+                // Always check for music status first (highest priority)
+                if (config.status.songStatus) {
+                    const songActivity = await getCurrentSongActivity();
+                    if (songActivity) {
+                        client.user.setActivity(songActivity);
+                        return;
+                    }
+                }
+                
                 const customStatus = await getCustomStatus();
                 
                 if (customStatus) {
@@ -88,15 +113,6 @@ module.exports = {
                         status: customStatus.activity.type === ActivityType.Streaming ? undefined : customStatus.status
                     });
                     return;
-                }
-
-                // Kiểm tra nếu có songStatus và được bật
-                if (config.status.songStatus) {
-                    const songActivity = await getCurrentSongActivity();
-                    if (songActivity) {
-                        client.user.setActivity(songActivity);
-                        return;
-                    }
                 }
 
                 // Sử dụng status mặc định

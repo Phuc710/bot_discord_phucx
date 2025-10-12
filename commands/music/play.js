@@ -255,7 +255,10 @@ module.exports = {
                         .setFooter({ text: `Yêu cầu bởi: ${user.username}`, iconURL: user.displayAvatarURL() })
                         .setDescription(`✅ Đã thêm **PlayList** tracks vào hàng đợi.`);
         
-                    const reply = await interaction.editReply({ embeds: [embed] });
+                    const reply = await interaction.editReply({ 
+                        embeds: [embed],
+                        files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                    });
                     setTimeout(() => reply.delete().catch(() => {}), 3000);
                 } else {
                     const track = resolve.tracks[0];
@@ -272,7 +275,10 @@ module.exports = {
                         .setFooter({ text: `Yêu cầu bởi: ${user.username}`, iconURL: user.displayAvatarURL() })
                         .setDescription(`🎵 Đã thêm **${track.info.title}** vào hàng đợi.`);
         
-                    const reply = await interaction.editReply({ embeds: [embed] });
+                    const reply = await interaction.editReply({ 
+                        embeds: [embed],
+                        files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                    });
                     setTimeout(() => reply.delete().catch(() => {}), 3000);
                 }
         
@@ -308,7 +314,10 @@ module.exports = {
                     .setFooter({ text: `Yêu cầu bởi: ${user.username}`, iconURL: user.displayAvatarURL() })
                     .setDescription(`🎵 Đã thêm **${track.info.title}** vào hàng đợi.`);
 
-                const reply = await interaction.editReply({ embeds: [embed] });
+                const reply = await interaction.editReply({ 
+                    embeds: [embed],
+                    files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                });
                 setTimeout(() => reply.delete().catch(() => {}), 3000);
 
                 if (!player.playing && !player.paused) player.play();

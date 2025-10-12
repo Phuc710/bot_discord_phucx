@@ -2,14 +2,42 @@ const { DisTube } = require('distube');
 const { YtDlpPlugin } = require('@distube/yt-dlp');
 const { Dynamic } = require('musicard');
 const musicIcons = require('../UI/icons/musicicons');
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, ActivityType } = require('discord.js');
 const path = require('path');
 const data = require('../UI/banners/musicard');
+const config = require('../config');
 
 module.exports = async (client) => {
   
     const distubeConfig = require('../utils/distubeConfig'); 
     
+    // Function to update bot status based on music state
+    const updateBotStatus = (song = null) => {
+        try {
+            if (song) {
+                // Update status to show current song
+                client.user.setPresence({
+                    activities: [{
+                        name: `🎵 ${song.name}`,
+                        type: ActivityType.Listening
+                    }],
+                    status: 'online'
+                });
+            } else {
+                // Set default status when no music is playing
+                const defaultStatus = config.status.rotateDefault[0] || { name: "Cùng lăng nghe || /help", type: "Playing" };
+                client.user.setPresence({
+                    activities: [{
+                        name: defaultStatus.name,
+                        type: ActivityType[defaultStatus.type] || ActivityType.Playing
+                    }],
+                    status: 'online'
+                });
+            }
+        } catch (error) {
+            console.error('Error updating bot status:', error);
+        }
+    };
     
     client.distube = new DisTube(client, {
         ...distubeConfig.distubeOptions,
@@ -119,6 +147,8 @@ module.exports = async (client) => {
     client.distube.on('playSong', async (queue, song) => {
      //    console.log(`Now playing: ${song.name} in ${queue.voiceChannel?.name}`);
         
+        // Update bot status to show current song
+        updateBotStatus(song);
 
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -193,7 +223,10 @@ module.exports = async (client) => {
                     .setFooter({ text: 'Distube Player', iconURL: musicIcons.footerIcon })
                     .setTimestamp();
 
-                const message = await queue.textChannel.send({ embeds: [embed] });
+                const message = await queue.textChannel.send({ 
+                    embeds: [embed],
+                    files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                });
                 addMessageForCleanup(queue.voiceChannel.guild.id, message);
                 
               
@@ -231,7 +264,10 @@ module.exports = async (client) => {
                     .setFooter({ text: 'Distube Player', iconURL: musicIcons.footerIcon })
                     .setTimestamp();
                     
-                const message = await queue.textChannel.send({ embeds: [embed] });
+                const message = await queue.textChannel.send({ 
+                    embeds: [embed],
+                    files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                });
                 addMessageForCleanup(queue.voiceChannel.guild.id, message);
                 
        
@@ -255,6 +291,8 @@ module.exports = async (client) => {
     client.distube.on('finish', async (queue) => {
       //   console.log(`Queue finished in ${queue.voiceChannel?.name}`);
         
+        // Reset bot status to default when queue finishes
+        updateBotStatus();
        
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -292,6 +330,8 @@ module.exports = async (client) => {
     client.distube.on('disconnect', async (queue) => {
        //  console.log(`Disconnected from ${queue.voiceChannel?.name}`);
         
+        // Reset bot status to default when disconnecting
+        updateBotStatus();
    
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -329,6 +369,8 @@ module.exports = async (client) => {
     client.distube.on('empty', async (queue) => {
        // console.log(`Voice channel ${queue.voiceChannel?.name} is empty`);
         
+        // Reset bot status to default when voice channel is empty
+        updateBotStatus();
      
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -402,6 +444,9 @@ module.exports = async (client) => {
 
     client.cleanupMusicMessages = cleanupMessages;
     client.addMusicMessage = addMessageForCleanup;
+    
+    // Make updateBotStatus available globally
+    client.updateBotStatus = updateBotStatus;
     
    
     client.distube.on('debug', (message) => {

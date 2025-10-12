@@ -8,10 +8,10 @@ module.exports = {
   mongodbUri: "",
   status: {
     rotateDefault: [
-      { name: '🎵 /play để phát nhạc', type: ActivityType.Listening },
-      { name: '📊 {servers} servers', type: ActivityType.Watching },
-      { name: '👥 {members} members', type: ActivityType.Watching },
-      { name: '🎸 Let the Beat Drop!', type: ActivityType.Listening },
+      {
+        name: "Cùng lăng nghe || /help",
+        type: "Playing"
+      }
     ],
     songStatus: true
   },

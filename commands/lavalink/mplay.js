@@ -381,7 +381,10 @@ module.exports = {
                                     .setFooter({ text: `Requested by: ${user.username}`, iconURL: user.displayAvatarURL() })
                                     .setDescription(`✅ Added  **PlayList** tracks to the queue.`);
                     
-                                const reply = await interaction.editReply({ embeds: [embed] });
+                                const reply = await interaction.editReply({ 
+                                    embeds: [embed],
+                                    files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                                });
                                 setTimeout(() => reply.delete().catch(() => {}), 3000);
                             } else {
                                 const track = resolve.tracks[0];
@@ -398,7 +401,10 @@ module.exports = {
                                     .setFooter({ text: `Requested by: ${user.username}`, iconURL: user.displayAvatarURL() })
                                     .setDescription(`🎵 Added **${track.info.title}** to the queue.`);
                     
-                                const reply = await interaction.editReply({ embeds: [embed] });
+                                const reply = await interaction.editReply({ 
+                                    embeds: [embed],
+                                    files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                                });
                                 setTimeout(() => reply.delete().catch(() => {}), 3000);
                             }
                     
@@ -434,7 +440,10 @@ module.exports = {
                                 .setFooter({ text: `Requested by: ${user.username}`, iconURL: user.displayAvatarURL() })
                                 .setDescription(`🎵 Added **${track.info.title}** to the queue.`);
                 
-                            const reply = await interaction.editReply({ embeds: [embed] });
+                            const reply = await interaction.editReply({ 
+                                embeds: [embed],
+                                files: [{ attachment: musicIcons.wrongIconPath, name: 'wrong.gif' }]
+                            });
                             setTimeout(() => reply.delete().catch(() => {}), 3000);
                 
                             if (!player.playing && !player.paused) player.play();
