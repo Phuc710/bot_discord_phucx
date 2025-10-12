@@ -1,4 +1,4 @@
-    const { hentaiCommandCollection, serverConfigCollection } = require('../mongodb');
+    const { serverConfigCollection } = require('../mongodb');
     const { EmbedBuilder } = require('discord.js');
     const fs = require('fs');
     const path = require('path');
@@ -11,7 +11,6 @@
             if (message.author.bot) return;
 
             if (!message.guild) return;
-            const hentaiSettings = await hentaiCommandCollection.findOne({ serverId: message.guild.id });
 
             
             let serverConfig;
@@ -43,14 +42,7 @@
                     const commandPath = path.join(excessCommandsPath, folder, `${commandName}.js`);
                     
                     if (fs.existsSync(commandPath)) {
-                        if (folder === 'hentai') {
-                            if (!hentaiSettings?.status) {
-                                return message.reply('Hentai commands are currently disabled.');
-                            }
-                        }
-                    
-                        if (config.excessCommands &&
-                            (folder === 'hentai' || config.excessCommands[folder])) {
+                        if (config.excessCommands && config.excessCommands[folder]) {
                             command = require(commandPath);
                     
                          

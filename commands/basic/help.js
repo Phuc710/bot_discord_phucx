@@ -15,7 +15,6 @@ const CATEGORY_NAMES_VI = {
     'basic': 'Cơ Bản',
     'utility': 'Tiện Ích',
     'moderation': 'Quản Lý',
-    'fun': 'Giải Trí',
     'music': 'Âm Nhạc',
     'lavalink': 'Âm Nhạc Lavalink',
     'distube': 'Âm Nhạc Distube',
@@ -25,7 +24,6 @@ const CATEGORY_NAMES_VI = {
     'media': 'Phương Tiện',
     'setups': 'Thiết Lập',
     'other': 'Khác',
-    'troll': 'Troll',
 };
 
 module.exports = {
@@ -49,7 +47,6 @@ module.exports = {
             const CATEGORY_ICONS = {
                 utility: "🛠️",
                 moderation: "🛡️",
-                fun: "🎮",
                 music: "🎵",
                 lavalink: "🎶",
                 distube: "🎧",

@@ -115,7 +115,7 @@ const fetchAndRegisterCommands = async () => {
 
 require('./handlers/security')(client);     
 require('./handlers/applications')(client); 
-require('./handlers/server');  
+// Server is now started separately in server.js
 require('./handlers/economyScheduler')(client);
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);

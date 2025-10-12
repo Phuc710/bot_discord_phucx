@@ -7,13 +7,13 @@ const cmdIcons = require('../../UI/icons/commandicons');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setup-status')
-        .setDescription('View or change the bot\'s presence')
+        .setDescription('Xem hoặc thay đổi trạng thái bot')
         .addSubcommand(sub =>
             sub.setName('add')
-                .setDescription('Add a custom status to rotation')
+                .setDescription('Thêm trạng thái tùy chỉnh vào rotation')
                 .addStringOption(opt =>
                     opt.setName('status')
-                        .setDescription('Bot status')
+                        .setDescription('Trạng thái bot')
                         .setRequired(true)
                         .addChoices(
                             { name: 'Online', value: 'online' },
@@ -22,11 +22,11 @@ module.exports = {
                         ))
                 .addStringOption(opt =>
                     opt.setName('activity')
-                        .setDescription('Activity text (use placeholders like {members}, {servers}, {channels})')
+                        .setDescription('Văn bản hoạt động (dùng placeholders như {members}, {servers}, {channels})')
                         .setRequired(true))
                 .addStringOption(opt =>
                     opt.setName('type')
-                        .setDescription('Activity type')
+                        .setDescription('Loại hoạt động')
                         .setRequired(true)
                         .addChoices(
                             { name: 'Playing', value: 'Playing' },
@@ -36,42 +36,42 @@ module.exports = {
                         ))
                 .addStringOption(opt =>
                     opt.setName('streamurl')
-                        .setDescription('Twitch Stream URL (only for Streaming activity)')
+                        .setDescription('URL stream Twitch (chỉ cho hoạt động Streaming)')
                         .setRequired(false))
         )
         .addSubcommand(sub =>
             sub.setName('view')
-                .setDescription('View all custom statuses in rotation')
+                .setDescription('Xem tất cả trạng thái tùy chỉnh')
         )
         .addSubcommand(sub =>
             sub.setName('remove')
-                .setDescription('Remove a custom status from rotation')
+                .setDescription('Xóa trạng thái tùy chỉnh khỏi rotation')
                 .addIntegerOption(opt =>
                     opt.setName('index')
-                        .setDescription('Index of the status to remove (use /setup-status view to see indices)')
+                        .setDescription('Chỉ số của trạng thái cần xóa (dùng /setup-status view để xem chỉ số)')
                         .setRequired(true))
         )
         .addSubcommand(sub =>
             sub.setName('interval')
-                .setDescription('Set the interval for status rotation')
+                .setDescription('Đặt thời gian xoay vòng trạng thái')
                 .addIntegerOption(opt =>
                     opt.setName('seconds')
-                        .setDescription('Interval in seconds (default: 10)')
+                        .setDescription('Thời gian tính bằng giây (mặc định: 10)')
                         .setRequired(true)
                         .setMinValue(5)
                         .setMaxValue(300))
         )
         .addSubcommand(sub =>
             sub.setName('toggle')
-                .setDescription('Toggle between default rotation and custom rotation')
+                .setDescription('Chuyển giữa rotation mặc định và tùy chỉnh')
                 .addBooleanOption(opt =>
                     opt.setName('use_custom')
-                        .setDescription('Use custom rotation instead of default')
+                        .setDescription('Dùng rotation tùy chỉnh thay vì mặc định')
                         .setRequired(true))
         )
         .addSubcommand(sub =>
             sub.setName('reset')
-                .setDescription('Reset to default rotating activities')
+                .setDescription('Đặt lại về trạng thái mặc định')
         ),
 
     async execute(interaction) {

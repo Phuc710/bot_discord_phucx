@@ -301,10 +301,10 @@ module.exports = (client) => {
                     
                 if (!hasOtherPlayers) {
                     await client.user.setActivity({
-                        name: `🎵 Ready to play music!`,
+                        name: `🎵 Sẵn sàng phát nhạc!`,
                         type: 2 // LISTENING
                     });
-                    console.log('Bot status reset: Ready to play music');
+                    console.log('Bot status reset: Sẵn sàng phát nhạc');
                 }
             } catch (error) {
                 console.error('Error resetting bot status:', error);
@@ -326,7 +326,7 @@ module.exports = (client) => {
             // Reset bot status khi queue kết thúc
             try {
                 await client.user.setActivity({
-                    name: `🎵 Ready to play music!`,
+                    name: `🎵 Sẵn sàng phát nhạc!`,
                     type: 2 // LISTENING
                 });
                 console.log('Bot status reset: Queue ended');

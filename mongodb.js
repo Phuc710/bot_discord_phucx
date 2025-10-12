@@ -66,7 +66,6 @@ const centralizedControlCollection = db.collection("centralizedControl");
 const nqnCollection = db.collection("nqn");
 const welcomeCollection = db.collection("welcomeChannels");
 const autoroleCollection = db.collection("autorolesetups");
-const hentaiCommandCollection = db.collection("hentailove");
 const serverConfigCollection = db.collection("serverconfig");
 const reactionRolesCollection = db.collection("reactionRoles");
 const antisetupCollection = db.collection("antisetup");
@@ -151,7 +150,6 @@ module.exports = {
     getGiveawayById,
     deleteGiveaway,
     autoroleCollection,
-    hentaiCommandCollection,
     serverConfigCollection,
     reactionRolesCollection,
     antisetupCollection,

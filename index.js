@@ -28,6 +28,9 @@ require('dotenv').config();
 const client = require('./main');
 require('./phucx');
 
+// Start web server for Render
+require('./server');
+
 const loadEventHandlers = () => {
     const colors = require('./UI/colors/colors');
 
