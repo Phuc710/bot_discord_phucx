@@ -12,74 +12,129 @@ const spotifyApi = new SpotifyWebApi({
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('Phát nhạc hoặc playlist trong voice channel')
-        .addStringOption(option =>
-            option.setName('query')
-                .setDescription('Nhập tên bài hát hoặc URL')
-                .setRequired(true)),
+        .setDescription('🎵 Phát nhạc - All-in-one music command')
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('song')
+                .setDescription('Phát bài hát hoặc playlist')
+                .addStringOption(option =>
+                    option.setName('query')
+                        .setDescription('Tên bài hát, URL YouTube/Spotify')
+                        .setRequired(true)))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('pause')
+                .setDescription('Tạm dừng nhạc'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('resume')
+                .setDescription('Tiếp tục phát nhạc'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('skip')
+                .setDescription('Bỏ qua bài hiện tại'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('stop')
+                .setDescription('Dừng nhạc và xóa queue'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('queue')
+                .setDescription('Xem hàng đợi nhạc'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('nowplaying')
+                .setDescription('Xem bài đang phát'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('volume')
+                .setDescription('Điều chỉnh âm lượng')
+                .addIntegerOption(option =>
+                    option.setName('level')
+                        .setDescription('Mức âm lượng 0-100')
+                        .setRequired(true)
+                        .setMinValue(0)
+                        .setMaxValue(100)))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('shuffle')
+                .setDescription('Trộn ngẫu nhiên hàng đợi'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('loop')
+                .setDescription('Chế độ lặp nhạc')
+                .addStringOption(option =>
+                    option.setName('mode')
+                        .setDescription('Chọn chế độ lặp')
+                        .setRequired(true)
+                        .addChoices(
+                            { name: 'Tắt lặp', value: 'none' },
+                            { name: 'Lặp bài hiện tại', value: 'track' },
+                            { name: 'Lặp hàng đợi', value: 'queue' }
+                        ))),
 
     async execute(interaction) {
         try {
             await interaction.deferReply();
-            const query = interaction.options.getString('query');
+            const subcommand = interaction.options.getSubcommand();
             const user = interaction.user;
             const member = interaction.member;
             const { channel } = member.voice;
             const client = interaction.client;
             const guildId = interaction.guild.id;
 
-            // Kiểm tra voice channel
-            if (!channel) {
-                const errorEmbed = new EmbedBuilder()
-                    .setColor('#FF0000')
-                    .setDescription('❌ Bạn phải ở trong voice channel để sử dụng lệnh này.');
-                
-                const reply = await interaction.editReply({ embeds: [errorEmbed] });
-                setTimeout(() => reply.delete().catch(() => {}), 3000);
-                return;
-            }
-
-            const botVoiceChannel = interaction.guild.members.me?.voice.channel;
-            
-            if (botVoiceChannel && botVoiceChannel.id !== channel.id) {
-                const errorEmbed = new EmbedBuilder()
-                    .setColor('#FF0000')
-                    .setDescription('❌ Bot đang phát nhạc ở voice channel khác.');
-                
-                const reply = await interaction.editReply({ embeds: [errorEmbed] });
-                setTimeout(() => reply.delete().catch(() => {}), 3000);
-                return;
-            }
-            
-            // Kiểm tra quyền
-            const permissions = channel.permissionsFor(client.user);
-            if (!permissions.has(PermissionFlagsBits.Connect) || !permissions.has(PermissionFlagsBits.Speak)) {
-                const errorEmbed = new EmbedBuilder()
-                    .setColor('#FF0000')
-                    .setDescription('❌ Bot cần quyền kết nối và nói trong voice channel.');
-                
-                const reply = await interaction.editReply({ embeds: [errorEmbed] });
-                setTimeout(() => reply.delete().catch(() => {}), 3000);
-                return;
-            }
-
-            // Lấy hoặc tạo player
-            let player = client.riffy.players.get(guildId);
-            
-            if (!player) {
-                try {
-                    player = await client.riffy.createConnection({
-                        guildId,
-                        voiceChannel: channel.id,
-                        textChannel: interaction.channel.id,
-                        deaf: true
-                    });
-                } catch (error) {
-                    console.error('Error creating player:', error);
-                    await interaction.editReply({ content: '❌ Không thể kết nối đến voice channel.' });
-                    return;
+            // Helper functions
+            const checkVoiceChannel = async () => {
+                if (!channel) {
+                    const errorEmbed = new EmbedBuilder()
+                        .setColor('#FF0000')
+                        .setDescription('❌ Bạn phải ở trong voice channel để sử dụng lệnh này.');
+                    
+                    const reply = await interaction.editReply({ embeds: [errorEmbed] });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    return false;
                 }
-            }
+                return true;
+            };
+
+            const getOrCreatePlayer = async () => {
+                let player = client.riffy.players.get(guildId);
+                
+                if (!player) {
+                    try {
+                        player = await client.riffy.createConnection({
+                            guildId,
+                            voiceChannel: channel.id,
+                            textChannel: interaction.channel.id,
+                            deaf: true
+                        });
+                    } catch (error) {
+                        console.error('Error creating player:', error);
+                        await interaction.editReply({ content: '❌ Không thể kết nối đến voice channel.' });
+                        return null;
+                    }
+                }
+                return player;
+            };
+
+            const checkPlayerExists = async () => {
+                const player = client.riffy.players.get(guildId);
+                if (!player) {
+                    const reply = await interaction.editReply({ content: '❌ Không có nhạc đang phát. Dùng `/play song` để bắt đầu!' });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    return false;
+                }
+                return player;
+            };
+
+            // Handle subcommands
+            switch (subcommand) {
+                case 'song': {
+                    if (!await checkVoiceChannel()) return;
+                    
+                    const query = interaction.options.getString('query');
+                    let player = await getOrCreatePlayer();
+                    if (!player) return;
 
             // Xử lý Spotify links
             if (query.includes('spotify.com')) {
@@ -258,8 +313,178 @@ module.exports = {
 
                 if (!player.playing && !player.paused) player.play();
             }
+                    break;
+                }
+
+                case 'pause': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    if (player.paused) {
+                        const reply = await interaction.editReply({ content: '⏸️ Nhạc đã được tạm dừng rồi.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    player.pause(true);
+                    const reply = await interaction.editReply({ content: '⏸️ Đã tạm dừng nhạc.' });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'resume': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    if (!player.paused) {
+                        const reply = await interaction.editReply({ content: '▶️ Nhạc chưa bị tạm dừng.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    player.pause(false);
+                    const reply = await interaction.editReply({ content: '▶️ Tiếp tục phát nhạc.' });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'skip': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    if (player.queue.length === 0) {
+                        const reply = await interaction.editReply({ content: '⏭️ Không có bài tiếp theo để bỏ qua.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    const currentTrack = player.current?.info?.title || 'Bài hát không xác định';
+                    player.stop();
+                    const reply = await interaction.editReply({ content: `⏭️ Đã bỏ qua: **${currentTrack}**` });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'stop': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    player.destroy();
+                    const reply = await interaction.editReply({ content: '⏹️ Đã dừng nhạc và xóa hàng đợi.' });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'queue': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    const queue = player.queue;
+                    if (!queue || queue.length === 0) {
+                        const reply = await interaction.editReply({ content: '📭 Hàng đợi đang trống.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    const maxDisplay = 10;
+                    const displayQueue = queue.slice(0, maxDisplay);
+                    const formattedQueue = displayQueue.map((track, i) => {
+                        const requester = track.requester?.username || 'Không xác định';
+                        return `${i + 1}. **${track.info.title}**\n   👤 ${requester}`;
+                    }).join('\n\n');
+                    
+                    const queueEmbed = new EmbedBuilder()
+                        .setColor('#DC92FF')
+                        .setTitle('🎶 Hàng Đợi Hiện Tại')
+                        .setDescription(formattedQueue)
+                        .setFooter({ 
+                            text: queue.length > maxDisplay 
+                                ? `Hiển thị ${maxDisplay}/${queue.length} bài hát` 
+                                : `Tổng cộng ${queue.length} bài hát`
+                        });
+                    
+                    await interaction.editReply({ embeds: [queueEmbed] });
+                    break;
+                }
+
+                case 'nowplaying': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    const currentTrack = player.current;
+                    if (!currentTrack) {
+                        const reply = await interaction.editReply({ content: '❌ Không có bài hát đang phát.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    const npEmbed = new EmbedBuilder()
+                        .setColor('#00D4FF')
+                        .setTitle('🎵 Đang Phát')
+                        .setDescription(`**${currentTrack.info.title}**`)
+                        .addFields(
+                            { name: '🎤 Tác giả', value: `\`${currentTrack.info.author || 'Không xác định'}\``, inline: true },
+                            { name: '👤 Yêu cầu bởi', value: `<@${currentTrack.requester?.id || user.id}>`, inline: true }
+                        );
+                    
+                    if (currentTrack.info.artwork) {
+                        npEmbed.setThumbnail(currentTrack.info.artwork);
+                    }
+                    
+                    const reply = await interaction.editReply({ embeds: [npEmbed] });
+                    setTimeout(() => reply.delete().catch(() => {}), 10000);
+                    break;
+                }
+
+                case 'volume': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    const volume = interaction.options.getInteger('level');
+                    player.setVolume(volume);
+                    const reply = await interaction.editReply({ content: `🔊 Âm lượng đã được đặt thành **${volume}%**` });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'shuffle': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    if (player.queue.length < 2) {
+                        const reply = await interaction.editReply({ content: '❌ Cần ít nhất 2 bài hát trong hàng đợi để trộn.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                        return;
+                    }
+                    
+                    player.queue.shuffle();
+                    const reply = await interaction.editReply({ content: '🔀 Đã trộn ngẫu nhiên hàng đợi!' });
+                    setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    break;
+                }
+
+                case 'loop': {
+                    const player = await checkPlayerExists();
+                    if (!player) return;
+                    
+                    const mode = interaction.options.getString('mode');
+                    
+                    try {
+                        player.setLoop(mode);
+                        const modeText = mode === 'none' ? 'Tắt lặp' : 
+                                        mode === 'track' ? 'Lặp bài hiện tại' : 'Lặp hàng đợi';
+                        const reply = await interaction.editReply({ content: `🔁 Chế độ lặp: **${modeText}**` });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    } catch (error) {
+                        console.error('Error setting loop mode:', error);
+                        const reply = await interaction.editReply({ content: '❌ Không thể thiết lập chế độ lặp.' });
+                        setTimeout(() => reply.delete().catch(() => {}), 3000);
+                    }
+                    break;
+                }
+            }
         } catch (error) {
-            console.error('Error resolving query:', error);
+            console.error('Error in play command:', error);
         
             const errorEmbed = new EmbedBuilder()
                 .setColor('#FF0000')

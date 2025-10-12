@@ -127,7 +127,7 @@ module.exports = {
           
             const createPages = (commandSet, type) => {
                 const pages = [];
-                const prefixCount = Object.values(prefixCommands).reduce((acc, cmds) => acc + cmds.length, 0);
+                const prefixCount = (typeof prefixCommands !== 'undefined') ? Object.values(prefixCommands).reduce((acc, cmds) => acc + cmds.length, 0) : 0;
                 const totalCommandsLoaded = Object.values(commandSet).reduce((acc, cmds) => acc + cmds.length, 0);
                 let masterCount = 0;
                 let subCount = 0;

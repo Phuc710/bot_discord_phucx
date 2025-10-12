@@ -3,8 +3,8 @@ module.exports = {
     enabled: true, 
     lavalink: {
       name: "Boo Bot - Made by Phucx",
-      password: "https://dsc.gg/ajidevserver",
-      host: "lava-v4.ajieblogs.eu.org",
+      password: "youshallnotpass",
+      host: "lavalink.jirayu.net",
       port:  443,
       secure: true
     }

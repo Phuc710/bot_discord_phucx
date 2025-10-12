@@ -176,12 +176,12 @@ module.exports = {
         }
         
         // 🟡 Category-based disabling
-        const category = command.category || 'undefined';
-        if (!categories[category]) {
+        const category = command.category || 'basic';
+        if (categories[category] === false) {
             console.warn(`Command in category '${category}' is disabled.`);
             try {
                 await interaction.reply({
-                    content: lang.commandDisabled,
+                    content: lang.commandDisabled || '⚠️ This command category is disabled.',
                     flags: 64 }); // InteractionResponseFlags.Ephemeral;
             } catch (replyError) {
                 console.error('Error when sending command disabled reply:', replyError);

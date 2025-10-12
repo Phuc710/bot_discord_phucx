@@ -7,9 +7,22 @@ const loadLogHandlers = require('./logHandlers');
 const scanCommands = require('./utils/scanCommands');
 const { EmbedBuilder, Partials } = require('discord.js');
 const client = new Client({
-    intents: Object.keys(GatewayIntentBits).map((a) => {
-        return GatewayIntentBits[a];
-    }),
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildMessageReactions,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.DirectMessages,
+        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildModeration,
+        GatewayIntentBits.GuildEmojisAndStickers,
+        GatewayIntentBits.GuildIntegrations,
+        GatewayIntentBits.GuildWebhooks,
+        GatewayIntentBits.GuildInvites,
+        GatewayIntentBits.GuildScheduledEvents
+    ],
     partials: [Partials.Channel]
 });
 const { connectToDatabase } = require('./mongodb');
