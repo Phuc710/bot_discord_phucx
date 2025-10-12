@@ -96,14 +96,16 @@ const queueDisplayTimeouts = new Map();
 
 module.exports = (client) => {
     if (lavalinkConfig.enabled) {
-        const nodes = [
-            {
-                host: lavalinkConfig.lavalink.host,
-                password: lavalinkConfig.lavalink.password,
-                port: lavalinkConfig.lavalink.port,
-                secure: lavalinkConfig.lavalink.secure
-            }
-        ];
+        const nodes = Array.isArray(lavalinkConfig.lavalink) 
+            ? lavalinkConfig.lavalink 
+            : [
+                {
+                    host: lavalinkConfig.lavalink.host,
+                    password: lavalinkConfig.lavalink.password,
+                    port: lavalinkConfig.lavalink.port,
+                    secure: lavalinkConfig.lavalink.secure
+                }
+            ];
 
         client.riffy = new Riffy(client, nodes, {
             send: (payload) => {
