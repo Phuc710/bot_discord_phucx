@@ -921,7 +921,8 @@ module.exports = {
             if (interaction.deferred || interaction.replied) {
                 await interaction.editReply({ content: msg }).catch(() => {});
             } else {
-                await interaction.reply({ content: msg, flags: 64 // InteractionResponseFlags.Ephemeral }).catch(() => {});
+                // InteractionResponseFlags.Ephemeral
+                await interaction.reply({ content: msg, flags: 64 }).catch(() => {});
             }
         }
         

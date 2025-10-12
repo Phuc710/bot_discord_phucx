@@ -12,9 +12,9 @@
         "fun": false
     },
     "categories": {
-        "media": false,
+        "media": true,
         "basic": true,
-        "utility": false,
+        "utility": true,
         "moderation": true,
         "core" :true,
         "lavalink": true,

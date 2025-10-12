@@ -124,7 +124,8 @@ function extractCodeBlocks(text) {
 const messageCodeBlocks = new Map();
 
 // Split long text into chunks that fit Discord's 2000 character limit
-function splitTextIntoChunks(text, maxLength = 2000) {
+function splitTextIntoChunks(text, maxLength = 1950) {
+    // Use 1950 instead of 2000 to leave safety margin
     if (text.length <= maxLength) {
         return [text];
     }
@@ -136,16 +137,40 @@ function splitTextIntoChunks(text, maxLength = 2000) {
     const lines = text.split('\n');
     
     for (const line of lines) {
-        // If single line is too long, force split it
+        // If single line is too long, force split it by words first
         if (line.length > maxLength) {
             if (currentChunk) {
-                chunks.push(currentChunk);
+                chunks.push(currentChunk.trim());
                 currentChunk = '';
             }
             
-            // Split the long line
-            for (let i = 0; i < line.length; i += maxLength) {
-                chunks.push(line.substring(i, i + maxLength));
+            // Try to split by words if it's plain text
+            const words = line.split(' ');
+            if (words.length > 1) {
+                let tempLine = '';
+                for (const word of words) {
+                    if ((tempLine + word + ' ').length > maxLength) {
+                        if (tempLine) {
+                            chunks.push(tempLine.trim());
+                            tempLine = word + ' ';
+                        } else {
+                            // Single word is too long, force split it
+                            for (let i = 0; i < word.length; i += maxLength) {
+                                chunks.push(word.substring(i, i + maxLength));
+                            }
+                        }
+                    } else {
+                        tempLine += word + ' ';
+                    }
+                }
+                if (tempLine.trim()) {
+                    currentChunk = tempLine;
+                }
+            } else {
+                // No words to split, force split by character
+                for (let i = 0; i < line.length; i += maxLength) {
+                    chunks.push(line.substring(i, i + maxLength));
+                }
             }
             continue;
         }
@@ -165,7 +190,7 @@ function splitTextIntoChunks(text, maxLength = 2000) {
         chunks.push(currentChunk.trim());
     }
     
-    return chunks;
+    return chunks.length > 0 ? chunks : [text];
 }
 
 // Format AI response with beautiful code blocks using embeds
@@ -184,6 +209,7 @@ function formatResponseWithCodeBlocks(aiResponse) {
     let lastIndex = 0;
     const codeBlockRegex = /```(\w+)?([\s\S]*?)```/g;
     let match;
+    let codeBlockCounter = 0;
     
     while ((match = codeBlockRegex.exec(aiResponse)) !== null) {
         // Add text before code block
@@ -194,11 +220,13 @@ function formatResponseWithCodeBlocks(aiResponse) {
             }
         }
         
-        // Add code block
+        // Add code block with unique ID
+        codeBlockCounter++;
         parts.push({
             type: 'code',
             language: match[1] || 'text',
-            code: match[2].trim()
+            code: match[2].trim(),
+            id: codeBlockCounter
         });
         
         lastIndex = match.index + match[0].length;
@@ -224,43 +252,64 @@ function formatResponseWithCodeBlocks(aiResponse) {
             // Check if code block is too long for embed description (max 4096 chars)
             const codeBlockContent = `\`\`\`${part.language}\n${part.code}\n\`\`\``;
             
-            if (codeBlockContent.length <= 4096) {
-                // Fits in embed
+            if (codeBlockContent.length <= 4096 && part.code.split('\n').length <= 50) {
+                // Fits in embed - use beautiful embed format
                 const embed = new EmbedBuilder()
-                    .setColor(0x2f3136) // Discord dark background color
+                    .setColor(0x5865F2) // Discord blurple color
                     .setTitle(`💻 ${part.language.toUpperCase()} Code`)
                     .setDescription(codeBlockContent)
-                    .setFooter({ text: '📋 Click reaction bên dưới để copy code!' })
+                    .setFooter({ text: 'Click vào code block và Ctrl+C để copy!' })
                     .setTimestamp();
                 
-                messages.push({ embeds: [embed] });
+                messages.push({ 
+                    embeds: [embed],
+                    codeData: { language: part.language, code: part.code, id: part.id }
+                });
             } else {
                 // Too long for embed, split code into multiple messages
-                // Send title first
-                messages.push({ content: `💻 **${part.language.toUpperCase()} Code:**` });
+                // Calculate max code length (2000 - length of code block markers)
+                const codeBlockWrapper = `\`\`\`${part.language}\n\n\`\`\``;
+                const maxCodeLength = 1950 - codeBlockWrapper.length; // Safety margin
                 
-                // Split code into chunks (leaving room for code block syntax)
-                const maxCodeLength = 1900; // Leave room for ```language\n and \n```
-                const codeLines = part.code.split('\n');
-                let currentCode = '';
-                
-                for (const line of codeLines) {
-                    if ((currentCode + line + '\n').length > maxCodeLength) {
-                        if (currentCode) {
-                            messages.push({ 
-                                content: `\`\`\`${part.language}\n${currentCode}\n\`\`\`` 
-                            });
-                        }
-                        currentCode = line + '\n';
-                    } else {
-                        currentCode += line + '\n';
-                    }
-                }
-                
-                if (currentCode.trim()) {
+                if (part.code.length <= maxCodeLength) {
+                    // Can fit in one message
                     messages.push({ 
-                        content: `\`\`\`${part.language}\n${currentCode}\n\`\`\`` 
+                        content: `💻 **${part.language.toUpperCase()} Code:**\n\`\`\`${part.language}\n${part.code}\n\`\`\`` 
                     });
+                } else {
+                    // Need to split into multiple messages
+                    messages.push({ content: `💻 **${part.language.toUpperCase()} Code (Part 1/${Math.ceil(part.code.length / maxCodeLength)}):**` });
+                    
+                    const codeLines = part.code.split('\n');
+                    let currentCode = '';
+                    let partNumber = 1;
+                    
+                    for (const line of codeLines) {
+                        // Check if adding this line would exceed limit
+                        if ((currentCode + line + '\n').length > maxCodeLength) {
+                            if (currentCode.trim()) {
+                                messages.push({ 
+                                    content: `\`\`\`${part.language}\n${currentCode.trim()}\n\`\`\`` 
+                                });
+                                partNumber++;
+                                
+                                // Add header for next part
+                                messages.push({ 
+                                    content: `💻 **${part.language.toUpperCase()} Code (Part ${partNumber}):**` 
+                                });
+                            }
+                            currentCode = line + '\n';
+                        } else {
+                            currentCode += line + '\n';
+                        }
+                    }
+                    
+                    // Send remaining code
+                    if (currentCode.trim()) {
+                        messages.push({ 
+                            content: `\`\`\`${part.language}\n${currentCode.trim()}\n\`\`\`` 
+                        });
+                    }
                 }
                 
                 messages.push({ content: '📋 *Click reaction để copy code!*' });
