@@ -12,15 +12,15 @@
         "fun": false
     },
     "categories": {
-        "media": true,
+        "media": false,
         "basic": true,
-        "utility": true,
+        "utility": false,
         "moderation": true,
         "core" :true,
         "lavalink": true,
         "music": true,
         "fun": true,
-        "distube": true,
+        "distube": false,
         "setups": true
     }
 }

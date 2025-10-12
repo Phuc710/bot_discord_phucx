@@ -60,7 +60,7 @@ module.exports = {
             const minutes = interaction.options.getInteger('minutes');
 
             if (minutes <= 0 || minutes > 1440) { // Max 24 hours
-                return interaction.reply({ content: 'Please enter a valid duration between 1 and 1440 minutes (24 hours).', flags: 64 // InteractionResponseFlags.Ephemeral });
+                return interaction.reply({ content: 'Please enter a valid duration between 1 and 1440 minutes (24 hours).', flags: 64 });
             }
 
             await interaction.reply({ content: `⏰ Timer set for ${minutes} minute(s). I'll notify you when it's done!` });
@@ -76,7 +76,7 @@ module.exports = {
             const message = interaction.options.getString('message');
 
             if (minutes <= 0 || minutes > 10080) { // Max 1 week
-                return interaction.reply({ content: 'Please enter a valid time between 1 and 10080 minutes (1 week).', flags: 64 // InteractionResponseFlags.Ephemeral });
+                return interaction.reply({ content: 'Please enter a valid time between 1 and 10080 minutes (1 week).', flags: 64 });
             }
 
             await interaction.reply({ content: `📝 Reminder set! I'll remind you about "${message}" in ${minutes} minute(s).` });
