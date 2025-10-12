@@ -77,8 +77,7 @@ module.exports = {
                     console.error('Failed to create default category:', err);
                     return interaction.reply({
                         content: '❌ Failed to create default category. Please try again or provide one.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
 
@@ -98,14 +97,13 @@ module.exports = {
 
             return interaction.reply({
                 content: `✔️ Ticket system updated for **${guild.name}**.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         if (sub === 'view') {
             const config = await TicketConfig.findOne({ serverId });
             if (!config) {
-                return interaction.reply({ content: '❌ No configuration found.', ephemeral: true });
+                return interaction.reply({ content: '❌ No configuration found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -121,7 +119,7 @@ module.exports = {
                 .setFooter({ text: 'Ticket Configuration', iconURL: cmdIcons.dotIcon })
                 .setTimestamp();
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

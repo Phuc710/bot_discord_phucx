@@ -39,10 +39,10 @@ module.exports = {
             const existing = await DisabledCommand.findOne({ guildId, commandName, subcommandName });
             if (existing) {
                 await existing.deleteOne();
-                return interaction.reply({ content: `✅ Command \`${commandName}${subcommandName ? ` ${subcommandName}` : ''}\` has been **enabled**.`, ephemeral: true });
+                return interaction.reply({ content: `✅ Command \`${commandName}${subcommandName ? ` ${subcommandName}` : ''}\` has been **enabled**.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
             } else {
                 await DisabledCommand.create({ guildId, commandName, subcommandName });
-                return interaction.reply({ content: `🚫 Command \`${commandName}${subcommandName ? ` ${subcommandName}` : ''}\` has been **disabled**.`, ephemeral: true });
+                return interaction.reply({ content: `🚫 Command \`${commandName}${subcommandName ? ` ${subcommandName}` : ''}\` has been **disabled**.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
         }
         if (subcommand === 'view') {
@@ -96,7 +96,7 @@ module.exports = {
                 value: `✅ Loaded: ${loadedCats.join(', ') || 'None'}\n❌ Unloaded: ${unloadedCats.join(', ') || 'None'}`
             });
         
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
     } else {

@@ -231,7 +231,7 @@ module.exports = {
                 
                 await interaction.editReply({
                     content: 'Something went wrong while showing the special gif.',
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
             }
         } else {

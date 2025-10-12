@@ -13,8 +13,8 @@ module.exports = (client) => {
             const appName = interaction.customId.replace('open_application_modal_', '');
             // Get the specific application by name instead of just any active one
             const app = await getApplication(guildId, appName);
-            if (!app) return interaction.reply({ content: '❌ Application not found.', ephemeral: true });
-            if (!app.isActive) return interaction.reply({ content: '❌ This application is not currently active.', ephemeral: true });
+            if (!app) return interaction.reply({ content: '❌ Application not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral
+            if (!app.isActive) return interaction.reply({ content: '❌ This application is not currently active.', flags: 64 }); // InteractionResponseFlags.Ephemeral
 
             const modal = new ModalBuilder().setCustomId(`application_form_${appName}`).setTitle(`Apply: ${appName}`);
             app.questions.forEach((question, i) => {
@@ -29,12 +29,12 @@ module.exports = (client) => {
             const appName = interaction.customId.replace('application_form_', '');
             // Get the specific application by name
             const app = await getApplication(guildId, appName);
-            if (!app) return interaction.reply({ content: '❌ Application not found.', ephemeral: true });
-            if (!app.isActive) return interaction.reply({ content: '❌ This application is not currently active.', ephemeral: true });
+            if (!app) return interaction.reply({ content: '❌ Application not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral
+            if (!app.isActive) return interaction.reply({ content: '❌ This application is not currently active.', flags: 64 }); // InteractionResponseFlags.Ephemeral
 
             const answers = app.questions.map((_, i) => interaction.fields.getTextInputValue(`question_${i}`));
             const responseChannel = interaction.guild.channels.cache.get(app.responseChannel);
-            if (!responseChannel) return interaction.reply({ content: '❌ Response channel not found.', ephemeral: true });
+            if (!responseChannel) return interaction.reply({ content: '❌ Response channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral
 
             const embed = new EmbedBuilder()
                 .setTitle(`📥 Application - ${appName}`)
@@ -48,12 +48,12 @@ module.exports = (client) => {
             );
 
             await responseChannel.send({ embeds: [embed], components: [row] });
-            interaction.reply({ content: '✅ Your application has been submitted!', ephemeral: true });
+            interaction.reply({ content: '✅ Your application has been submitted!', flags: 64 }); // InteractionResponseFlags.Ephemeral
         }
 
         else if (interaction.isButton() &&
             (interaction.customId.startsWith('accept_application_') || interaction.customId.startsWith('deny_application_'))) {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: 64 }); // InteractionResponseFlags.Ephemeral
 
             const embed = interaction.message.embeds[0];
             const userId = interaction.customId.split('_').pop();
@@ -75,9 +75,9 @@ module.exports = (client) => {
                     .setDescription(`Your application to **${interaction.guild.name}** was **${status}**.`)
                     .setColor(color);
                 await user.send({ embeds: [dm] });
-                interaction.followUp({ content: '📬 User has been notified.', ephemeral: true });
+                interaction.followUp({ content: '📬 User has been notified.', flags: 64 }); // InteractionResponseFlags.Ephemeral
             } catch {
-                interaction.followUp({ content: '⚠️ Could not DM the user.', ephemeral: true });
+                interaction.followUp({ content: '⚠️ Could not DM the user.', flags: 64 }); // InteractionResponseFlags.Ephemeral
             }
         }
     });

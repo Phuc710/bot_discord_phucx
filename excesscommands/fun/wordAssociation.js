@@ -167,7 +167,7 @@ module.exports = {
            
 
         if (!interaction.guild) {
-            return interaction.reply({ content: lang.serverOnlyMessage, ephemeral: true });
+            return interaction.reply({ content: lang.serverOnlyMessage, flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         const commandUser = interaction.user;
@@ -175,7 +175,7 @@ module.exports = {
 
         const botMember = await interaction.guild.members.fetch(interaction.client.user.id);
         if (!botMember) {
-            return interaction.reply({ content: lang.fetchBotMemberError, ephemeral: true });
+            return interaction.reply({ content: lang.fetchBotMemberError, flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         const requiredPermissions = [
@@ -201,12 +201,12 @@ module.exports = {
                 }
             }).join(', ');
 
-            return interaction.reply({ content: `${lang.missingPermissionsMessage} ${permissionNames}. ${lang.adjustPermissions}`, ephemeral: true });
+            return interaction.reply({ content: `${lang.missingPermissionsMessage} ${permissionNames}. ${lang.adjustPermissions}`, flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         const existingChannel = interaction.guild.channels.cache.find(channel => channel.name === `word-association-${commandUser.username.toLowerCase()}`);
         if (existingChannel) {
-            return interaction.reply({ content: `${lang.existingGameMessage} ${existingChannel}. ${lang.finishCurrentGame}`, ephemeral: true });
+            return interaction.reply({ content: `${lang.existingGameMessage} ${existingChannel}. ${lang.finishCurrentGame}`, flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         let tempChannel;
@@ -227,7 +227,7 @@ module.exports = {
             });
         } catch (error) {
             if (!interaction.replied) {
-                await interaction.reply({ content: lang.channelCreationError, ephemeral: true });
+                await interaction.reply({ content: lang.channelCreationError, flags: 64 // InteractionResponseFlags.Ephemeral });
             }
             return;
         }
@@ -238,14 +238,14 @@ module.exports = {
             await commandUser.send(`${lang.wordIsMessage} **${currentWord}** ${lang.keepSecret}`);
         } catch (error) {
             if (!interaction.replied) {
-                await interaction.reply({ content: lang.dmSendError, ephemeral: true });
+                await interaction.reply({ content: lang.dmSendError, flags: 64 // InteractionResponseFlags.Ephemeral });
             }
             await tempChannel.delete().catch(console.error);
             return;
         }
 
         if (!interaction.replied) {
-            await interaction.reply({ content: `${lang.gameStartedMessage} ${tempChannel}. ${lang.goodLuck}`, ephemeral: true });
+            await interaction.reply({ content: `${lang.gameStartedMessage} ${tempChannel}. ${lang.goodLuck}`, flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         const filter = message => message.channel.id === tempChannel.id;

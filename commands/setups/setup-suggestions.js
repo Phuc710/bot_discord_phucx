@@ -36,8 +36,7 @@ module.exports = {
 
         return interaction.reply({
             content: `✅ Suggestions configured.\nChannel: <#${channel.id}>\nAllowed Role: ${role ? `<@&${role.id}>` : 'Everyone'}`,
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } else {
         const embed = new EmbedBuilder()
             .setColor('#3498db')

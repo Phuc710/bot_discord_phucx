@@ -300,7 +300,7 @@ module.exports = {
         if (!interaction.member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
             return interaction.reply({ 
                 content: '🚫 You need the "Manage Channels" permission to use this command.',
-                ephemeral: true 
+                flags: 64 // InteractionResponseFlags.Ephemeral 
             });
         }
 
@@ -325,7 +325,7 @@ module.exports = {
             } catch (error) {
                 return interaction.reply({ 
                     content: '❌ Invalid fields format. Use JSON like `[{"name":"Field","value":"Value","inline":false}]`.',
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 
@@ -334,7 +334,7 @@ module.exports = {
             if (color && !/^#([0-9A-F]{6})$/i.test(color)) {
                 return interaction.reply({ 
                     content: '❌ Invalid color format. Use HEX (e.g., `#ff5733`).',
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 
@@ -345,7 +345,7 @@ module.exports = {
                 if (value && !/^https?:\/\//.test(value)) {
                     return interaction.reply({ 
                         content: `❌ Invalid URL in **${field}**. Ensure it starts with \`http://\` or \`https://\`.`,
-                        ephemeral: true 
+                        flags: 64 // InteractionResponseFlags.Ephemeral 
                     });
                 }
             }
@@ -402,7 +402,7 @@ module.exports = {
                     `📝 Preview of your embed **${name}**:`,
                 embeds: [previewEmbed],
                 components: [row],
-                ephemeral: true
+                flags: 64 // InteractionResponseFlags.Ephemeral
             });
 
             // Wait for button interaction
@@ -450,7 +450,7 @@ module.exports = {
                 if (embeds.length === 0) {
                     return interaction.reply({ 
                         content: '❌ No saved embeds found.',
-                        ephemeral: true 
+                        flags: 64 // InteractionResponseFlags.Ephemeral 
                     });
                 }
 
@@ -476,7 +476,7 @@ module.exports = {
                 if (pages.length === 1) {
                     return interaction.reply({ 
                         embeds: [pages[0]], 
-                        ephemeral: true 
+                        flags: 64 // InteractionResponseFlags.Ephemeral 
                     });
                 }
 
@@ -499,7 +499,7 @@ module.exports = {
                 const response = await interaction.reply({
                     embeds: [pages[0]],
                     components: [row],
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
 
                 // Create collector for button interactions
@@ -548,7 +548,7 @@ module.exports = {
             if (!embedData) {
                 return interaction.reply({ 
                     content: `❌ No embed found with the name **${embedName}**.`,
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 
@@ -577,7 +577,7 @@ module.exports = {
                 content: `📝 Viewing embed **${embedName}**`,
                 embeds: [embed],
                 components: [row],
-                ephemeral: true
+                flags: 64 // InteractionResponseFlags.Ephemeral
             });
             
             // Create collector for button interactions
@@ -634,14 +634,14 @@ module.exports = {
                     // Notify user to use the save command
                     await i.reply({
                         content: `To edit this embed, use \`/embed save name:${embedName}\` with the properties you want to change.`,
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
                 else if (action === 'announce') {
                     // Notify user to use the announce command
                     await i.reply({
                         content: `To announce this embed, use \`/embed announce embed_name:${embedName} channel:#your-channel\``,
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
             });
@@ -670,7 +670,7 @@ module.exports = {
             if (!embed) {
                 return interaction.reply({ 
                     content: `❌ No embed found with the name **${name}**.`,
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 
@@ -695,7 +695,7 @@ module.exports = {
                 content: `⚠️ Are you sure you want to delete the embed **${name}**?`,
                 embeds: [previewEmbed],
                 components: [row],
-                ephemeral: true
+                flags: 64 // InteractionResponseFlags.Ephemeral
             });
 
             // Wait for button interaction
@@ -750,7 +750,7 @@ module.exports = {
             if (!channel.isTextBased()) {
                 return interaction.reply({ 
                     content: '❌ The selected channel must be a text channel.',
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
             }
 
@@ -761,14 +761,14 @@ module.exports = {
                     !permissions.has(PermissionsBitField.Flags.ViewChannel)) {
                         return interaction.reply({
                             content: "❌ I don't have permission to send messages in that channel.",
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                 } catch (error) {
                     console.error("Error checking permissions:", error);
                     return interaction.reply({
                         content: "❌ Failed to verify channel permissions. Please check if I have access to that channel.",
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
     
@@ -780,7 +780,7 @@ module.exports = {
                     if (!embedData) {
                         return interaction.reply({ 
                             content: `❌ No embed found with the name **${embedName}**.`,
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
     
@@ -796,7 +796,7 @@ module.exports = {
                         !interaction.options.getString('description')) {
                         return interaction.reply({
                             content: "❌ Please provide at least a title or description for your embed.",
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
     
@@ -854,7 +854,7 @@ module.exports = {
                              (content.length > 0 ? `\n\nMessage content: "${content}"` : ""),
                     embeds: [embed],
                     components: [previewRow],
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
     
                 // Wait for button interaction
@@ -974,7 +974,7 @@ module.exports = {
                 if (!channel.isTextBased()) {
                     return interaction.reply({
                         content: "❌ The selected channel must be a text channel.",
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
                 
@@ -985,13 +985,13 @@ module.exports = {
                         !permissions.has(PermissionsBitField.Flags.ViewChannel)) {
                         return interaction.reply({
                             content: "❌ I don't have permission to send messages in that channel.",
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                 } catch (error) {
                     return interaction.reply({
                         content: "❌ Failed to verify channel permissions.",
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
                 
@@ -999,7 +999,7 @@ module.exports = {
                 if (!/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/.test(time)) {
                     return interaction.reply({
                         content: "❌ Invalid time format. Please use 24-hour format (HH:MM).",
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
                 
@@ -1008,7 +1008,7 @@ module.exports = {
                 if (!embedData) {
                     return interaction.reply({
                         content: `❌ No embed found with the name **${embedName}**.`,
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
                 
@@ -1086,7 +1086,7 @@ module.exports = {
                         content: `📝 Preview of your scheduled announcement:`,
                         embeds: [previewEmbed],
                         components: [row],
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                     
                     // Wait for button interaction
@@ -1132,7 +1132,7 @@ module.exports = {
                     console.error("Error creating schedule:", error);
                     return interaction.reply({
                         content: `❌ Failed to create schedule: ${error.message}`,
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                 }
             }
@@ -1149,7 +1149,7 @@ module.exports = {
                     if (schedules.length === 0) {
                         return interaction.reply({
                             content: '📆 No scheduled announcements found.',
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                     
@@ -1196,7 +1196,7 @@ module.exports = {
                     if (pages.length === 1) {
                         return interaction.reply({ 
                             embeds: [pages[0]], 
-                            ephemeral: true 
+                            flags: 64 // InteractionResponseFlags.Ephemeral 
                         });
                     }
                     
@@ -1219,7 +1219,7 @@ module.exports = {
                     const response = await interaction.reply({
                         embeds: [pages[0]],
                         components: [row],
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                     
                     // Create collector for button interactions
@@ -1266,7 +1266,7 @@ module.exports = {
                     if (!scheduleId) {
                         return interaction.reply({
                             content: '❌ Please provide a schedule ID to view.',
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                     
@@ -1275,7 +1275,7 @@ module.exports = {
                     if (!schedule) {
                         return interaction.reply({
                             content: '❌ Schedule not found. Please check the ID and try again.',
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                     
@@ -1343,7 +1343,7 @@ module.exports = {
                     const response = await interaction.reply({
                         embeds: [embed],
                         components: [row],
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                     
                     // Handle button interactions
@@ -1404,7 +1404,7 @@ module.exports = {
                             if (!embedData) {
                                 await i.reply({
                                     content: `❌ Embed "${schedule.embedName}" not found. It may have been deleted.`,
-                                    ephemeral: true
+                                    flags: 64 // InteractionResponseFlags.Ephemeral
                                 });
                                 return;
                             }
@@ -1414,7 +1414,7 @@ module.exports = {
                             await i.reply({
                                 content: `📝 Preview of embed **${schedule.embedName}**:`,
                                 embeds: [embedPreview],
-                                ephemeral: true
+                                flags: 64 // InteractionResponseFlags.Ephemeral
                             });
                         }
                     });
@@ -1439,7 +1439,7 @@ module.exports = {
                     if (!scheduleId) {
                         return interaction.reply({
                             content: '❌ Please provide a schedule ID to delete.',
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                     
@@ -1448,7 +1448,7 @@ module.exports = {
                     if (!schedule) {
                         return interaction.reply({
                             content: '❌ Schedule not found. Please check the ID and try again.',
-                            ephemeral: true
+                            flags: 64 // InteractionResponseFlags.Ephemeral
                         });
                     }
                     
@@ -1498,7 +1498,7 @@ module.exports = {
                     const response = await interaction.reply({
                         embeds: [embed],
                         components: [row],
-                        ephemeral: true
+                        flags: 64 // InteractionResponseFlags.Ephemeral
                     });
                     
                    

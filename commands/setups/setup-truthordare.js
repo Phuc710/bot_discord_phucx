@@ -55,14 +55,13 @@ module.exports = {
 
             return interaction.reply({
                 content: `✅ Truth or Dare system is now active in ${targetChannel}.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         if (sub === 'view') {
             const config = await TruthOrDareConfig.findOne({ serverId });
             if (!config) {
-                return interaction.reply({ content: '❌ No Truth or Dare channel has been set yet.', ephemeral: true });
+                return interaction.reply({ content: '❌ No Truth or Dare channel has been set yet.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -72,7 +71,7 @@ module.exports = {
                 .setFooter({ text: 'Truth or Dare Settings' })
                 .setTimestamp();
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

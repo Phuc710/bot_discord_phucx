@@ -62,8 +62,7 @@ module.exports = {
 
             return interaction.reply({
                 content: `📤 Leave messages in channel have been **${status ? 'enabled' : 'disabled'}** for <#${channel.id}>.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'setdm') {
             const status = interaction.options.getBoolean('status');
@@ -82,8 +81,7 @@ module.exports = {
 
             return interaction.reply({
                 content: `📩 Leave DM has been **${status ? 'enabled' : 'disabled'}**.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'view') {
             const config = await LeaveSettings.findOne({ serverId: serverID });
@@ -91,8 +89,7 @@ module.exports = {
             if (!config) {
                 return interaction.reply({
                     content: '⚠ No leave configuration found.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -106,7 +103,7 @@ module.exports = {
                 )
                 .setTimestamp();
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

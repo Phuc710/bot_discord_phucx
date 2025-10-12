@@ -104,7 +104,7 @@ module.exports = {
             
                 } catch (err) {
                     console.error('❌ Error handling suggestion vote:', err);
-                    await interaction.reply({ content: '⚠️ Could not register your vote. Please try again later.', ephemeral: true });
+                    await interaction.reply({ content: '⚠️ Could not register your vote. Please try again later.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
         }
@@ -118,11 +118,11 @@ module.exports = {
                 const correctCode = verificationCodes.get(userId);
 
                 if (!correctCode) {
-                    return interaction.reply({ content: 'Verification expired! Click verify again.', ephemeral: true });
+                    return interaction.reply({ content: 'Verification expired! Click verify again.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
 
                 if (userInput !== correctCode) {
-                    return interaction.reply({ content: 'Verification failed! Try again.', ephemeral: true });
+                    return interaction.reply({ content: 'Verification failed! Try again.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
 
                 const config = await VerificationConfig.findOne({ guildId: interaction.guild.id });
@@ -132,7 +132,7 @@ module.exports = {
                 const unverifiedRole = interaction.guild.roles.cache.get(config.unverifiedRoleId);
                 const verifiedRole = interaction.guild.roles.cache.get(config.verifiedRoleId);
 
-                if (!verifiedRole) return interaction.reply({ content: '⚠️ Verified role not found.', ephemeral: true });
+                if (!verifiedRole) return interaction.reply({ content: '⚠️ Verified role not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
                 // Remove Unverified Role and Assign Verified Role
                 if (unverifiedRole) {
@@ -141,7 +141,7 @@ module.exports = {
                 await member.roles.add(verifiedRole);
                 verificationCodes.delete(userId);
 
-                await interaction.reply({ content: '✅ Verification successful! You now have access to the server.', ephemeral: true });
+                await interaction.reply({ content: '✅ Verification successful! You now have access to the server.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 await member.send('🎉 You have been verified and can now access the server!');
             }
         
@@ -168,8 +168,7 @@ module.exports = {
             try {
                 await interaction.reply({
                     content: `❌ This command${subcommandName ? ` (${interaction.commandName} ${subcommandName})` : ''} is disabled in this server.`,
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             } catch (replyError) {
                 console.error('Error sending disabled command reply:', replyError);
             }
@@ -183,8 +182,7 @@ module.exports = {
             try {
                 await interaction.reply({
                     content: lang.commandDisabled,
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             } catch (replyError) {
                 console.error('Error when sending command disabled reply:', replyError);
             }
@@ -207,7 +205,7 @@ module.exports = {
         
             try {
                 if (!interaction.replied && !interaction.deferred) {
-                    await interaction.reply({ content: lang.error, ephemeral: true });
+                    await interaction.reply({ content: lang.error, flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             } catch (replyError) {
                 if (replyError.message.includes('Interaction has already been acknowledged') ||

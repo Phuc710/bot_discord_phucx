@@ -216,8 +216,7 @@ async function handleGuildSelection(interaction, client) {
     if (!guild) {
         return interaction.followUp({
             content: '❌ Selected server not found. Please try again.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
 
@@ -225,8 +224,7 @@ async function handleGuildSelection(interaction, client) {
     if (!originalMessage) {
         return interaction.followUp({
             content: "❌ Couldn't find your original message. Please send a new message.",
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     try {
@@ -251,8 +249,7 @@ async function handleGuildSelection(interaction, client) {
         console.error('Error handling guild selection:', err);
         return interaction.followUp({
             content: '❌ Failed to create your ModMail. Please try again later.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 }
 
@@ -505,8 +502,7 @@ async function handleAnonymousReply(interaction, client) {
         if (!user || !guild) {
             return modalInteraction.followUp({
                 content: '❌ User or guild not found.',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
 
@@ -537,22 +533,20 @@ async function handleAnonymousReply(interaction, client) {
 
         return modalInteraction.followUp({
             content: '✅ Anonymous reply sent.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } catch (err) {
         console.error('Error handling anonymous reply:', err);
         if (err.name === 'Error [InteractionCollectorError]') return;
 
         return interaction.followUp({
             content: '❌ Failed to send anonymous reply. Please try again.',
-            ephemeral: true
-        }).catch(() => { });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral.catch(() => { });
     }
 }
 
 
 async function handleModMailClose(interaction, client) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
 
     const [userId, guildId] = interaction.customId.replace('close_modmail_', '').split('_');
     const { guild, channel, member } = interaction;
@@ -563,8 +557,7 @@ async function handleModMailClose(interaction, client) {
     if (!config) {
         return interaction.followUp({
             content: '❌ ModMail configuration not found.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     const isAdmin = member.roles.cache.has(config.adminRoleId) ||
@@ -574,8 +567,7 @@ async function handleModMailClose(interaction, client) {
     if (!isAdmin) {
         return interaction.followUp({
             content: '❌ You do not have permission to close this ModMail.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
 
@@ -589,8 +581,7 @@ async function handleModMailClose(interaction, client) {
         if (!modmailData) {
             return interaction.followUp({
                 content: '❌ ModMail data not found.',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
 
@@ -667,8 +658,7 @@ async function handleModMailClose(interaction, client) {
 
         await interaction.followUp({
             content: '✅ ModMail closed successfully. Thread will be archived.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
 
         await channel.setArchived(true, 'ModMail closed');
@@ -686,8 +676,7 @@ async function handleModMailClose(interaction, client) {
         console.error("Error closing modmail:", err);
         return interaction.followUp({
             content: '❌ Failed to close ModMail. Please try again.',
-            ephemeral: true
-        });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 }
 

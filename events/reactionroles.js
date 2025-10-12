@@ -22,22 +22,19 @@ module.exports = (client) => {
                     if (!role) {
                         return interaction.reply({ 
                             content: '❌ This role no longer exists.', 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     if (!guild.members.me.permissions.has('ManageRoles')) {
                         return interaction.reply({ 
                             content: '❌ I don\'t have permission to manage roles.', 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     if (role.position >= guild.members.me.roles.highest.position) {
                         return interaction.reply({ 
                             content: `❌ I can't manage the role **${role.name}** because it's positioned higher than or equal to my highest role.`, 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     try {
@@ -45,21 +42,18 @@ module.exports = (client) => {
                             await member.roles.remove(role);
                             return interaction.reply({ 
                                 content: `🗑️ Removed role **${role.name}**`, 
-                                ephemeral: true 
-                            });
+                                flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         } else {
                             await member.roles.add(role);
                             return interaction.reply({ 
                                 content: `✅ Added role **${role.name}**`, 
-                                ephemeral: true 
-                            });
+                                flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         }
                     } catch (error) {
                         console.error('Error managing role:', error);
                         return interaction.reply({ 
                             content: `❌ Failed to toggle role **${role.name}**. Please contact an administrator.`, 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                 }
             }
@@ -77,30 +71,26 @@ module.exports = (client) => {
                     if (!reactionRole) {
                         return interaction.reply({ 
                             content: '❌ This role selection is no longer valid.', 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     const role = guild.roles.cache.get(selectedValue);
                     if (!role) {
                         return interaction.reply({ 
                             content: '❌ This role no longer exists.', 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     if (!guild.members.me.permissions.has('ManageRoles')) {
                         return interaction.reply({ 
                             content: '❌ I don\'t have permission to manage roles.', 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     if (role.position >= guild.members.me.roles.highest.position) {
                         return interaction.reply({ 
                             content: `❌ I can't manage the role **${role.name}** because it's positioned higher than or equal to my highest role.`, 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                     
                     try {
@@ -108,21 +98,18 @@ module.exports = (client) => {
                             await member.roles.remove(role);
                             return interaction.reply({ 
                                 content: `🗑️ Removed role **${role.name}**`, 
-                                ephemeral: true 
-                            });
+                                flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         } else {
                             await member.roles.add(role);
                             return interaction.reply({ 
                                 content: `✅ Added role **${role.name}**`, 
-                                ephemeral: true 
-                            });
+                                flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         }
                     } catch (error) {
                         //console.error('Error managing role:', error);
                         return interaction.reply({ 
                             content: `❌ Failed to toggle role **${role.name}**. Please contact an administrator.`, 
-                            ephemeral: true 
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                     }
                 }
             }
@@ -133,15 +120,13 @@ module.exports = (client) => {
                 if (err.code === 50013) {
                     return interaction.reply({ 
                         content: '❌ I don\'t have the required permissions to manage roles.', 
-                        ephemeral: true 
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
             
             return interaction.reply({ 
                 content: '❌ An error occurred while managing the reaction role.', 
-                ephemeral: true 
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     });
 

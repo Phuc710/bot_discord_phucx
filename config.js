@@ -1,7 +1,7 @@
 const { ActivityType } = require('discord.js');
 
 module.exports = {
-  ownerId: '895512947013611530',
+  ownerId: '589636439122378763',
   status: {
     rotateDefault: [
       { name: '🎵 /play để phát nhạc', type: ActivityType.Listening },

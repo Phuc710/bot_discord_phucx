@@ -63,8 +63,7 @@ module.exports = {
 
             return interaction.reply({
                 content: `📢 Welcome messages in channel have been **${status ? 'enabled' : 'disabled'}** for <#${channel.id}>.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'setdm') {
             const status = interaction.options.getBoolean('status');
@@ -83,8 +82,7 @@ module.exports = {
 
             return interaction.reply({
                 content: `📩 Welcome DM has been **${status ? 'enabled' : 'disabled'}**.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'view') {
             const config = await WelcomeSettings.findOne({ serverId: serverID });
@@ -92,8 +90,7 @@ module.exports = {
             if (!config) {
                 return interaction.reply({
                     content: '⚠ No welcome configuration found for this server.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -107,7 +104,7 @@ module.exports = {
                 )
                 .setTimestamp();
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

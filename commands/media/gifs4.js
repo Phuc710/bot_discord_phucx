@@ -265,7 +265,7 @@ module.exports = {
                 
                 await interaction.editReply({
                     content: 'Something went wrong while showing the reaction.',
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
             }
         } else {

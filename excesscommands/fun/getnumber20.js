@@ -51,17 +51,17 @@ module.exports = {
         const targetScore = 20;
 
         if (mode === 'vsbot' && opponent.id !== interaction.client.user.id) {
-            return interaction.reply({ content: '🚫 You cannot mention an opponent when playing against the bot.', ephemeral: true });
+            return interaction.reply({ content: '🚫 You cannot mention an opponent when playing against the bot.', flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         if (mode === 'vsuser' && opponent.id === interaction.client.user.id) {
-            return interaction.reply({ content: '🚫 You cannot play against the bot in VS User mode. Please choose a different opponent.', ephemeral: true });
+            return interaction.reply({ content: '🚫 You cannot play against the bot in VS User mode. Please choose a different opponent.', flags: 64 // InteractionResponseFlags.Ephemeral });
         }
 
         if (activeGames[serverId]) {
             return interaction.reply({
                 content: '🚫 A game is already in progress in this server! Please wait for the current game to finish before starting a new one.',
-                ephemeral: true
+                flags: 64 // InteractionResponseFlags.Ephemeral
             });
         }
 
@@ -188,13 +188,13 @@ module.exports = {
             const maxNumber = activeGames[serverId].score + 2;
 
             if (userId !== activeGames[serverId].currentTurnUserId) {
-                const replyMessage = await m.reply({ content: `🚫 It's not your turn! Please wait for <@${activeGames[serverId].currentTurnUserId}>'s turn.`, ephemeral: true });
+                const replyMessage = await m.reply({ content: `🚫 It's not your turn! Please wait for <@${activeGames[serverId].currentTurnUserId}>'s turn.`, flags: 64 // InteractionResponseFlags.Ephemeral });
                 setTimeout(() => replyMessage.delete(), 10000);
                 return;
             }
 
             if (userChoice < minNumber || userChoice > maxNumber) {
-                const replyMessage = await m.reply({ content: `🚫 You can only add 1 or 2 to the current score. Please choose a valid number between ${minNumber} and ${maxNumber}.`, ephemeral: true });
+                const replyMessage = await m.reply({ content: `🚫 You can only add 1 or 2 to the current score. Please choose a valid number between ${minNumber} and ${maxNumber}.`, flags: 64 // InteractionResponseFlags.Ephemeral });
                 setTimeout(() => replyMessage.delete(), 10000);
                 return;
             }

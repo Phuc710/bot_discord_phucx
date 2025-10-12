@@ -255,8 +255,7 @@ module.exports = {
       if (roles.length === 0) {
         return interaction.reply({ 
           content: '❌ You must provide at least one role and label.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
 
     
@@ -333,8 +332,7 @@ module.exports = {
 
         return interaction.reply({ 
           content: `✅ Reaction role buttons have been set up in <#${channel.id}>!`, 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } else {
      
         const options = roles.map((role, i) => {
@@ -393,8 +391,7 @@ module.exports = {
 
         return interaction.reply({ 
           content: `✅ Reaction role dropdown menu has been set up in <#${channel.id}>!`, 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     } else if (subcommand === 'menu') {
       const title = interaction.options.getString('title');
@@ -438,8 +435,7 @@ module.exports = {
 
       return interaction.reply({ 
         content: `✅ Empty reaction role menu has been created in <#${channel.id}>! Use \`/reactionroles add\` to add roles to this menu.`, 
-        ephemeral: true 
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } else if (subcommand === 'add') {
       const messageId = interaction.options.getString('message_id');
       const channel = interaction.options.getChannel('channel');
@@ -455,8 +451,7 @@ module.exports = {
         if (!message) {
           return interaction.reply({ 
             content: '❌ Could not find the specified message.', 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
        
@@ -501,8 +496,7 @@ module.exports = {
             if (totalButtons >= 25) {
               return interaction.reply({ 
                 content: '❌ Maximum button limit reached (25). Consider using a dropdown menu instead.', 
-                ephemeral: true 
-              });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
             
           
@@ -518,8 +512,7 @@ module.exports = {
               if (components.length >= 5) {
                 return interaction.reply({ 
                   content: '❌ No more rows available. Maximum of 5 rows reached.', 
-                  ephemeral: true 
-                });
+                  flags: 64 }); // InteractionResponseFlags.Ephemeral;
               }
               
           
@@ -567,14 +560,12 @@ module.exports = {
             
             return interaction.reply({ 
               content: `✅ Added role ${role.name} to the reaction role message.`, 
-              ephemeral: true 
-            });
+              flags: 64 }); // InteractionResponseFlags.Ephemeral;
           }
           
           return interaction.reply({ 
             content: '❌ This message is not set up as a reaction role menu.', 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
       
@@ -589,8 +580,7 @@ module.exports = {
           if (menuRoles.length >= 25) {
             return interaction.reply({ 
               content: '❌ Maximum limit of 25 options per dropdown menu reached.', 
-              ephemeral: true 
-            });
+              flags: 64 }); // InteractionResponseFlags.Ephemeral;
           }
           
           // Check if this role is already in the menu
@@ -598,8 +588,7 @@ module.exports = {
           if (roleExists) {
             return interaction.reply({ 
               content: `❌ Role ${role.name} is already in this reaction role menu.`, 
-              ephemeral: true 
-            });
+              flags: 64 }); // InteractionResponseFlags.Ephemeral;
           }
           
           // Create all options from existing menu roles plus the new one
@@ -660,15 +649,13 @@ module.exports = {
           
           return interaction.reply({ 
             content: `✅ Added role ${role.name} to the reaction role menu.`, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
       } catch (error) {
         console.error('Error adding role to reaction message:', error);
         return interaction.reply({ 
           content: '❌ An error occurred while adding the role |  No same roles / ids allowed', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     } else if (subcommand === 'remove') {
       const messageId = interaction.options.getString('message_id');
@@ -681,8 +668,7 @@ module.exports = {
         if (!message) {
           return interaction.reply({ 
             content: '❌ Could not find the specified message.', 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         // Find the reaction role configuration for this role
@@ -694,8 +680,7 @@ module.exports = {
         if (!reactionRole) {
           return interaction.reply({ 
             content: `❌ Role ${role.name} was not found in this reaction role message.`, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         // Remove from database
@@ -736,8 +721,7 @@ module.exports = {
           
           return interaction.reply({ 
             content: `✅ Removed role ${role.name} from the reaction role message.`, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         } else if (reactionRole.type === 'menu') {
           // Get all remaining roles for this menu
           const menuRoles = await reactionRolesCollection.find({ 
@@ -797,15 +781,13 @@ module.exports = {
           
           return interaction.reply({ 
             content: `✅ Removed role ${role.name} from the reaction role menu.`, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
       } catch (error) {
         console.error('Error removing role from reaction message:', error);
         return interaction.reply({ 
           content: '❌ An error occurred while removing the role.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     } else if (subcommand === 'view') {
       // Fetch all reaction role configurations for this server
@@ -816,8 +798,7 @@ module.exports = {
       if (allReactionRoles.length === 0) {
         return interaction.reply({ 
           content: '📝 No reaction role setups found for this server.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       // Group by message ID
@@ -872,13 +853,11 @@ module.exports = {
         if (i === 0) {
           await interaction.reply({ 
             embeds: embedsChunk, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         } else {
           await interaction.followUp({ 
             embeds: embedsChunk, 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
       }
     } else if (subcommand === 'delete') {
@@ -894,8 +873,7 @@ module.exports = {
         if (reactionRoles.length === 0) {
           return interaction.reply({ 
             content: '❌ No reaction role setup found for this message.', 
-            ephemeral: true 
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         // Try to delete the message
@@ -911,14 +889,12 @@ module.exports = {
         
         return interaction.reply({ 
           content: `✅ Reaction role setup for message ID ${messageId} has been deleted.`, 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } catch (error) {
         console.error('Error deleting reaction role setup:', error);
         return interaction.reply({ 
           content: '❌ An error occurred while deleting the reaction role setup.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     }
   } else {

@@ -59,16 +59,14 @@ module.exports = {
         if (!config) {
             return interaction.reply({
                 content: '❌ Ticket system is not configured for this server. Use `/setup-ticket` first.',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         // Check if the ticket system is enabled
         if (!config.status) {
             return interaction.reply({
                 content: '❌ Ticket system is currently disabled in this server.',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         // Handle refresh command
@@ -81,16 +79,14 @@ module.exports = {
             if (!hasPermission) {
                 return interaction.reply({
                     content: '❌ You do not have permission to refresh the ticket message.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const ticketChannel = guild.channels.cache.get(config.ticketChannelId);
             if (!ticketChannel) {
                 return interaction.reply({
                     content: '❌ Configured ticket channel not found. Please check settings.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             // Send/refresh the ticket embed
@@ -98,8 +94,7 @@ module.exports = {
             
             return interaction.reply({
                 content: '✅ Ticket creation message has been refreshed.',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         // Handle create command
@@ -117,8 +112,7 @@ module.exports = {
                 if (!hasPermission) {
                     return interaction.reply({
                         content: '❌ You do not have permission to create tickets for other users.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
             
@@ -133,8 +127,7 @@ module.exports = {
                 if (existingChannel) {
                     return interaction.reply({
                         content: `❌ ${targetUser} already has an open ticket: ${existingChannel}`,
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 } else {
                     // Clean up stale data if channel doesn't exist
                     await TicketUserData.deleteOne({ 
@@ -144,7 +137,7 @@ module.exports = {
                 }
             }
             
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
             
             // Create ticket channel
             const ticketChannel = await guild.channels.create({
@@ -187,8 +180,7 @@ module.exports = {
             
             return interaction.followUp({
                 content: `✅ Ticket created successfully in ${ticketChannel}`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         // Handle close command
@@ -202,8 +194,7 @@ module.exports = {
             if (!ticketData) {
                 return interaction.reply({
                     content: '❌ This command can only be used in ticket channels.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
             
             // Check permissions if not ticket owner
@@ -215,12 +206,11 @@ module.exports = {
                 if (!hasPermission) {
                     return interaction.reply({
                         content: '❌ You do not have permission to close other users\' tickets.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
             
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
             
             const reason = options.getString('reason') || 'No reason provided';
             const ticketOwner = await client.users.fetch(ticketData.userId).catch(() => null);
@@ -271,8 +261,7 @@ module.exports = {
             
             await interaction.followUp({
                 content: '✅ Ticket closing in 5 seconds...',
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
             
             // Delete channel and clean up database
             setTimeout(async () => {

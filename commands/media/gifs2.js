@@ -352,7 +352,7 @@ module.exports = {
                 
                 await interaction.editReply({
                     content: 'Something went wrong while performing the interaction.',
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
             }
         } else {

@@ -1,24 +1,3 @@
-/*
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-                                                 
-  _____  _    _ _    _  _____  _    _ 
- |  __ \| |  | | |  | |/ ____|| |  | |
- | |__) | |__| | |  | | |     | |  | |
- |  ___/|  __  | |  | | |     | |  | |
- | |    | |  | | |__| | |____ | |__| |
- |_|    |_|  |_|\____/ \_____| \____/ 
-                    
-DISCORD :  https://discord.gg/cc9U4w6a                   
-YouTube : https://www.youtube.com/@PhucxDev                         
-
-Command Verified : ✓  
-Website        : phucdev.xo.je  
-Test Passed    : ✓
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-*/
-
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } = require('discord.js');
 const { centralMusicCollection } = require('../../mongodb');
 const cmdIcons = require('../../UI/icons/commandicons');
@@ -228,23 +207,3 @@ module.exports = {
     }
 };
 
-/*
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-                                                 
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
-                    
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
-
-Command Verified : ✓  
-Website        : ssrr.tech  
-Test Passed    : ✓
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-*/

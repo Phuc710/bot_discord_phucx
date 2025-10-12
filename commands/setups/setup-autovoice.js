@@ -74,16 +74,14 @@ module.exports = {
       
       return interaction.reply({
         content: `✅ Auto voice channels have been ${status ? 'enabled' : 'disabled'}!\n\nMain channel: ${voiceChannel.name}\nManager channel: ${managerChannel.name}\n${roleText}`,
-        ephemeral: true
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } else if (subcommand === 'view') {
       const config = await VoiceChannelModel.findOne({ serverId: serverID });
       
       if (!config) {
         return interaction.reply({
           content: 'No auto voice configuration found for this server.',
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       const voiceChannel = guild.channels.cache.get(config.voiceChannelId) || 'Channel not found';
@@ -111,8 +109,7 @@ module.exports = {
       
       return interaction.reply({
         embeds: [embed],
-        ephemeral: true
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
   } else {
     const embed = new EmbedBuilder()

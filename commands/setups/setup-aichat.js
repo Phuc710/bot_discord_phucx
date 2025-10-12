@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, InteractionResponseType } = require('discord.js');
 const AiChat = require('../../models/aichat/aiModel');
 const cmdIcons = require('../../UI/icons/commandicons');
 const checkPermissions = require('../../utils/checkPermissions');
@@ -68,14 +68,12 @@ module.exports = {
                     
                     await interaction.reply({
                         content: updateMessage,
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 } catch (error) {
                     console.error(`Error setting up AI chat for guild ${guildId}:`, error);
                     await interaction.reply({
                         content: '❌ There was an error saving your settings. Please try again later.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             } else if (subcommand === 'view') {
                 try {
@@ -85,8 +83,7 @@ module.exports = {
                     if (!config) {
                         await interaction.reply({
                             content: '❓ AI Chat has not been set up for this server yet.',
-                            ephemeral: true
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         return;
                     }
 
@@ -97,14 +94,12 @@ module.exports = {
                             `**Channel:** ${channel}\n` +
                             `**Status:** ${config.isEnabled ? '✅ Enabled' : '❌ Disabled'}\n` +
                             `**Last Updated:** ${config.updatedAt?.toLocaleString() || 'Unknown'}\n`,
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 } catch (error) {
                     console.error(`Error fetching AI chat config for guild ${guildId}:`, error);
                     await interaction.reply({
                         content: '❌ There was an error retrieving your settings. Please try again later.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             } else if (subcommand === 'disable') {
                 try {
@@ -114,8 +109,7 @@ module.exports = {
                     if (!config) {
                         await interaction.reply({
                             content: '❓ AI Chat has not been set up for this server yet.',
-                            ephemeral: true
-                        });
+                            flags: 64 }); // InteractionResponseFlags.Ephemeral;
                         return;
                     }
                     
@@ -123,14 +117,12 @@ module.exports = {
                     
                     await interaction.reply({
                         content: `✅ AI Chat has been disabled for this server.`,
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 } catch (error) {
                     console.error(`Error disabling AI chat for guild ${guildId}:`, error);
                     await interaction.reply({
                         content: '❌ There was an error updating your settings. Please try again later.',
-                        ephemeral: true
-                    });
+                        flags: 64 }); // InteractionResponseFlags.Ephemeral;
                 }
             }
         } else {

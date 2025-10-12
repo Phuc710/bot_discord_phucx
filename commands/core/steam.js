@@ -32,12 +32,18 @@ module.exports = {
         if (sub === 'add') {
             const steamID = interaction.options.getString('id');
             await setAccount(interaction.user.id, 'steam', steamID);
-            return interaction.reply({ content: `✅ Steam ID set to **${steamID}**.`, ephemeral: true });
+            return interaction.reply({ 
+                content: `✅ Steam ID set to **${steamID}**.`, 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
 
         if (sub === 'remove') {
             await removeAccount(interaction.user.id, 'steam');
-            return interaction.reply({ content: `🗑️ Your Steam ID has been removed.`, ephemeral: true });
+            return interaction.reply({ 
+                content: `🗑️ Your Steam ID has been removed.`, 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
 
         if (sub === 'info') {
@@ -47,7 +53,10 @@ module.exports = {
                 .setTitle('🛠 Steam Info')
                 .setDescription(steamID ? `**${targetUser.username}**'s Steam ID: \`${steamID}\`` : `${targetUser.username} has not set a Steam ID.`)
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ 
+                embeds: [embed], 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
     } else {
         const embed = new EmbedBuilder()

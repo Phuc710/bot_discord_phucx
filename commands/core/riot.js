@@ -33,12 +33,18 @@ module.exports = {
         if (sub === 'add') {
             const riotID = interaction.options.getString('id');
             await setAccount(interaction.user.id, 'riot', riotID);
-            return interaction.reply({ content: `✅ Riot ID set to **${riotID}**.`, ephemeral: true });
+            return interaction.reply({ 
+                content: `✅ Riot ID set to **${riotID}**.`, 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
 
         if (sub === 'remove') {
             await removeAccount(interaction.user.id, 'riot');
-            return interaction.reply({ content: `🗑️ Your Riot ID has been removed.`, ephemeral: true });
+            return interaction.reply({ 
+                content: `🗑️ Your Riot ID has been removed.`, 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
 
         if (sub === 'info') {
@@ -48,7 +54,10 @@ module.exports = {
                 .setTitle('🎮 Riot Games Info')
                 .setDescription(riotID ? `**${targetUser.username}**'s Riot ID: \`${riotID}\`` : `${targetUser.username} has not set a Riot ID.`)
                 .setTimestamp();
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ 
+                embeds: [embed], 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
     } else {
         const embed = new EmbedBuilder()

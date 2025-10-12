@@ -42,7 +42,7 @@ module.exports = (client) => {
       const member = await interaction.guild.members.fetch(interaction.user.id);
       
       if (giveaway.role && !member.roles.cache.has(giveaway.role)) {
-        return interaction.reply({ content: 'You do not have the required role to enter this giveaway.', ephemeral: true });
+        return interaction.reply({ content: 'You do not have the required role to enter this giveaway.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     
       if (!giveaway.entries.includes(interaction.user.id)) {
@@ -57,21 +57,18 @@ module.exports = (client) => {
     
         await interaction.followUp({ 
           content: 'You have entered the giveaway!', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } else {
         await interaction.reply({ 
           content: 'You are already entered in this giveaway.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     } catch (error) {
       console.error('Error handling enter giveaway interaction:', error);
       try {
         await interaction.reply({ 
           content: 'There was an error processing your request. Please try again later.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } catch (replyError) {
         console.error('Failed to reply to interaction:', replyError);
       }
@@ -98,14 +95,13 @@ module.exports = (client) => {
         .setColor(0x7289da)
         .setFooter({ text: `Total Participants: ${giveaway.entries.length} | Giveaway ID: ${giveaway.messageId}` });
     
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } catch (error) {
       console.error('Error handling view participants interaction:', error);
       try {
         await interaction.reply({ 
           content: 'There was an error retrieving the participants list.', 
-          ephemeral: true 
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } catch (replyError) {
         console.error('Failed to reply to interaction:', replyError);
       }

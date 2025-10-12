@@ -388,13 +388,13 @@ module.exports = (client) => {
             if (!match) return;
         
             if (interaction.user.id !== userId) {
-                return interaction.reply({ content: '⚠️ You are not authorized to control this music session.', ephemeral: true });
+                return interaction.reply({ content: '⚠️ You are not authorized to control this music session.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
         
             const player = client.riffy.players.get(interaction.guildId);
             if (!player) {
                 try {
-                    await interaction.deferReply({ ephemeral: true });
+                    await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
                     await interaction.editReply({ content: '⚠️ Music player not found. The session may have ended.' });
                 } catch (err) {
                     if (err.code !== 10062) console.error('Defer error:', err);
@@ -403,7 +403,7 @@ module.exports = (client) => {
             }
         
             try {
-                await interaction.deferReply({ ephemeral: true });
+                await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
             } catch (err) {
                 if (err.code !== 10062) return;
             }

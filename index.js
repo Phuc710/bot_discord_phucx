@@ -2,7 +2,7 @@
 const colors = require('./UI/colors/colors');
 
 process.on('uncaughtException', (error) => {
-    console.error(`${colors.red}[ LỖI KHÔNG XỪ LÝ ]${colors.reset} ${colors.red}Lỗi không được xử lý:${colors.reset}`, error.message);
+    console.error(`${colors.red}[ LỖI KHÔNG XǮa LÝ ]${colors.reset} ${colors.red}Lỗi không được xử lý:${colors.reset}`, error.message);
     console.log(`${colors.yellow}[ TẮT BOT ]${colors.reset} ${colors.yellow}Bot đang tắt do lỗi nghiêm trọng... 🛑${colors.reset}`);
     process.exit(1);
 });

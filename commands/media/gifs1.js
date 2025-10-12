@@ -201,7 +201,7 @@ module.exports = {
                 
                 await interaction.editReply({
                     content: 'Something went wrong while showing the emotion.',
-                    ephemeral: true
+                    flags: 64 // InteractionResponseFlags.Ephemeral
                 });
             }
         } else {

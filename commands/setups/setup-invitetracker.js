@@ -57,8 +57,7 @@ module.exports = {
             if (!config) {
                 return interaction.reply({
                     content: '⚠ No invite tracker configuration found for this server.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -71,7 +70,7 @@ module.exports = {
                 )
                 .setTimestamp();
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

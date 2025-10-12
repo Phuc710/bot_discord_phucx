@@ -326,8 +326,8 @@ module.exports = {
                     if (i.user.id !== interaction.user.id) {
                         await i.reply({ 
                             content: `⚠️ Only ${interaction.user.tag} can interact with these controls.`, 
-                            ephemeral: true 
-                        });
+                            flags: 64  
+                        }); // InteractionResponseFlags.Ephemeral;
                         return;
                     }
 
@@ -363,8 +363,8 @@ module.exports = {
                         const errorMethod = i.replied || i.deferred ? i.editReply : i.reply;
                         await errorMethod.call(i, {
                             content: '⚠️ An error occurred while processing your interaction. Please try again.',
-                            ephemeral: true
-                        });
+                            flags: 64 
+                        }); // InteractionResponseFlags.Ephemeral;
                     } catch (secondaryError) {
                         //console.error('Failed to send error response:', secondaryError);
                     }
@@ -412,7 +412,10 @@ module.exports = {
                 .setTimestamp();
 
           
-            await interaction.editReply({ embeds: [embed], ephemeral: true });
+            await interaction.editReply({ 
+                embeds: [embed], 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
     }
 };

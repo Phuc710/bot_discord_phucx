@@ -57,8 +57,7 @@ module.exports = {
     if (!botManagers.includes(interaction.user.id) && interaction.user.id !== guild.ownerId) {
       return interaction.reply({ 
         content: '❌ Only the **server owner** or **bot managers** can use this command.', 
-        ephemeral: true 
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     // **Subcommand: SET**
@@ -81,17 +80,17 @@ module.exports = {
           { upsert: true }
         );
 
-        return interaction.reply({ content: `✅ Configuration updated successfully.`, ephemeral: true });
+        return interaction.reply({ content: `✅ Configuration updated successfully.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } catch (error) {
         console.error('Error updating config:', error);
-        return interaction.reply({ content: '❌ Error saving configuration.', ephemeral: true });
+        return interaction.reply({ content: '❌ Error saving configuration.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     }
 
     // **Subcommand: VIEW**
     if (subcommand === 'view') {
       if (!configData) {
-        return interaction.reply({ content: '⚠ No configuration found for this server.', ephemeral: true });
+        return interaction.reply({ content: '⚠ No configuration found for this server.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
 
       const embed = new EmbedBuilder()
@@ -100,7 +99,7 @@ module.exports = {
         .setDescription(`**Server ID:** ${configData.serverId}\n**Bot Managers:** ${configData.botManagers.join(', ') || 'None'}\n**Prefix:** ${configData.prefix || '!'}`)
         .setTimestamp();
 
-      return interaction.reply({ embeds: [embed], ephemeral: true });
+      return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     // **Subcommand: EDIT**
@@ -122,10 +121,10 @@ module.exports = {
           { $set: { botManagers: updatedBotManagers, prefix: resetPrefix ? '!' : configData?.prefix } }
         );
 
-        return interaction.reply({ content: '✅ Configuration updated successfully.', ephemeral: true });
+        return interaction.reply({ content: '✅ Configuration updated successfully.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       } catch (error) {
         console.error('Error editing config:', error);
-        return interaction.reply({ content: '❌ Error updating configuration.', ephemeral: true });
+        return interaction.reply({ content: '❌ Error updating configuration.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
     } else {
@@ -144,25 +143,4 @@ module.exports = {
     }
   }
 };
-
-/*
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-                                                 
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
-                    
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
-
-Command Verified : ✓  
-Website        : ssrr.tech  
-Test Passed    : ✓
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-*/
 

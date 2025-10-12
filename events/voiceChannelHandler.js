@@ -404,7 +404,7 @@ const handleButtonInteraction = async (interaction) => {
           guild.roles.everyone,
           { ViewChannel: true }
         );
-        await interaction.reply({ content: 'Your channel is now revealed. Everyone can see it.', ephemeral: true });
+        await interaction.reply({ content: 'Your channel is now revealed. Everyone can see it.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         break;
 
       case 'edit_channel':
@@ -441,7 +441,7 @@ const handleButtonInteraction = async (interaction) => {
       case 'disconnect_member':
         // Show a list of members to disconnect
         if (currentVoiceChannel.members.size <= 1) {
-          return interaction.reply({ content: 'There are no other members to disconnect.', ephemeral: true });
+          return interaction.reply({ content: 'There are no other members to disconnect.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         const memberOptions = currentVoiceChannel.members
@@ -462,8 +462,7 @@ const handleButtonInteraction = async (interaction) => {
         await interaction.reply({
           content: 'Select a member to disconnect from the voice channel:',
           components: [row],
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
         break;
 
       case 'view_channel_info':
@@ -486,16 +485,16 @@ const handleButtonInteraction = async (interaction) => {
           )
           .setTimestamp();
 
-        await interaction.reply({ embeds: [infoEmbed], ephemeral: true });
+        await interaction.reply({ embeds: [infoEmbed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
         break;
 
       case 'increase_limit':
         if (currentVoiceChannel.userLimit < 99) {
           const newLimit = currentVoiceChannel.userLimit === 0 ? 2 : currentVoiceChannel.userLimit + 1;
           await currentVoiceChannel.setUserLimit(newLimit);
-          await interaction.reply({ content: `User limit increased to ${newLimit}.`, ephemeral: true });
+          await interaction.reply({ content: `User limit increased to ${newLimit}.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
         } else {
-          await interaction.reply({ content: 'Maximum user limit (99) reached.', ephemeral: true });
+          await interaction.reply({ content: 'Maximum user limit (99) reached.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         break;
 
@@ -504,9 +503,9 @@ const handleButtonInteraction = async (interaction) => {
           const newLimit = currentVoiceChannel.userLimit - 1;
           await currentVoiceChannel.setUserLimit(newLimit);
           const limitMsg = newLimit === 0 ? 'removed (unlimited)' : `decreased to ${newLimit}`;
-          await interaction.reply({ content: `User limit ${limitMsg}.`, ephemeral: true });
+          await interaction.reply({ content: `User limit ${limitMsg}.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
         } else {
-          await interaction.reply({ content: 'User limit is already unlimited.', ephemeral: true });
+          await interaction.reply({ content: 'User limit is already unlimited.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         break;
 
@@ -530,8 +529,7 @@ const handleButtonInteraction = async (interaction) => {
           await interaction.reply({
             content: 'Select a bitrate for your voice channel:',
             components: [bitrateRow],
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
           break;
   
         case 'change_region':
@@ -562,13 +560,12 @@ const handleButtonInteraction = async (interaction) => {
           await interaction.reply({
             content: 'Select a region for your voice channel:',
             components: [regionRow],
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
           break;
   
         case 'transfer_ownership':
           if (currentVoiceChannel.members.size <= 1) {
-            return interaction.reply({ content: 'There are no other members to transfer ownership to.', ephemeral: true });
+            return interaction.reply({ content: 'There are no other members to transfer ownership to.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
           }
           
           const ownerOptions = currentVoiceChannel.members
@@ -588,12 +585,11 @@ const handleButtonInteraction = async (interaction) => {
           await interaction.reply({
             content: 'Select a member to transfer ownership to:',
             components: [ownerRow],
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
           break;
 
       default:
-        //await interaction.reply({ content: 'Invalid button pressed.', ephemeral: true });
+        //await interaction.reply({ content: 'Invalid button pressed.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
   } catch (error) {
     console.error('Error handling button interaction:', error);
@@ -620,7 +616,7 @@ const handleModalSubmit = async (interaction) => {
     try {
       const channel = interaction.guild.channels.cache.get(channelId);
       if (!channel) {
-        return interaction.reply({ content: 'Channel not found.', ephemeral: true });
+        return interaction.reply({ content: 'Channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       await channel.setName(newName);
@@ -629,10 +625,10 @@ const handleModalSubmit = async (interaction) => {
         { $set: { name: newName, description: newDescription } }
       );
       
-      await interaction.reply({ content: 'Channel name and description updated successfully!', ephemeral: true });
+      await interaction.reply({ content: 'Channel name and description updated successfully!', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } catch (error) {
       console.error('Error updating channel:', error);
-      await interaction.reply({ content: 'An error occurred while updating the channel.', ephemeral: true });
+      await interaction.reply({ content: 'An error occurred while updating the channel.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
   }
 };
@@ -648,19 +644,19 @@ const handleSelectMenu = async (interaction) => {
     try {
       const channel = interaction.guild.channels.cache.get(channelId);
       if (!channel) {
-        return interaction.reply({ content: 'Channel not found.', ephemeral: true });
+        return interaction.reply({ content: 'Channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       const memberToDisconnect = channel.members.get(selectedUserId);
       if (!memberToDisconnect) {
-        return interaction.reply({ content: 'Member not found in the channel.', ephemeral: true });
+        return interaction.reply({ content: 'Member not found in the channel.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       await memberToDisconnect.voice.disconnect();
-      await interaction.reply({ content: `Disconnected ${memberToDisconnect.user.username} from the voice channel.`, ephemeral: true });
+      await interaction.reply({ content: `Disconnected ${memberToDisconnect.user.username} from the voice channel.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } catch (error) {
       //console.error('Error disconnecting member:', error);
-      await interaction.reply({ content: 'An error occurred while disconnecting the member.', ephemeral: true });
+      await interaction.reply({ content: 'An error occurred while disconnecting the member.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
   }
   if (interaction.customId.startsWith('set_bitrate_')) {
@@ -669,14 +665,13 @@ const handleSelectMenu = async (interaction) => {
     const bitrate = parseInt(interaction.values[0]);
     
     if (!channel) {
-      return interaction.reply({ content: 'Channel not found.', ephemeral: true });
+      return interaction.reply({ content: 'Channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
     
     await channel.setBitrate(bitrate);
     return interaction.reply({ 
       content: `Voice channel bitrate set to ${bitrate / 1000} kbps.`, 
-      ephemeral: true 
-    });
+      flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
   
  
@@ -686,21 +681,19 @@ const handleSelectMenu = async (interaction) => {
     const region = interaction.values[0];
     
     if (!channel) {
-      return interaction.reply({ content: 'Channel not found.', ephemeral: true });
+      return interaction.reply({ content: 'Channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
     
     try {
       await channel.setRTCRegion(region === 'auto' ? null : region);
       return interaction.reply({ 
         content: `Voice channel region set to ${region === 'auto' ? 'Automatic' : region}.`, 
-        ephemeral: true 
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     } catch (error) {
       console.error('Error setting region:', error);
       return interaction.reply({ 
         content: 'An error occurred while setting the region.', 
-        ephemeral: true 
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
   }
   
@@ -711,12 +704,12 @@ const handleSelectMenu = async (interaction) => {
     
     const channel = interaction.guild.channels.cache.get(channelId);
     if (!channel) {
-      return interaction.reply({ content: 'Channel not found.', ephemeral: true });
+      return interaction.reply({ content: 'Channel not found.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
     
     const newOwner = channel.members.get(newOwnerId);
     if (!newOwner) {
-      return interaction.reply({ content: 'Selected member is no longer in the channel.', ephemeral: true });
+      return interaction.reply({ content: 'Selected member is no longer in the channel.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
     
     await channel.permissionOverwrites.edit(
@@ -736,8 +729,7 @@ const handleSelectMenu = async (interaction) => {
     
     return interaction.reply({
       content: `Channel ownership transferred to ${newOwner.user.username}.`,
-      ephemeral: true
-    });
+      flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 
   // Handle disconnect member selection

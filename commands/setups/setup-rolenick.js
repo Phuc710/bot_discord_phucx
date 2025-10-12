@@ -55,13 +55,12 @@ module.exports = {
 
             return interaction.reply({
                 content: `✅ Nickname format for **${role.name}** set to \`${format}\``,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         if (subcommand === 'view') {
             if (!config || config.roles.length === 0) {
-                return interaction.reply({ content: '⚠️ No role-nickname configurations set.', ephemeral: true });
+                return interaction.reply({ content: '⚠️ No role-nickname configurations set.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const display = config.roles.map(r => {
@@ -71,28 +70,27 @@ module.exports = {
 
             return interaction.reply({
                 content: `📋 Role-Nickname Configurations:\n${display}`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         if (subcommand === 'remove') {
             if (!config) {
-                return interaction.reply({ content: '⚠️ No configuration exists.', ephemeral: true });
+                return interaction.reply({ content: '⚠️ No configuration exists.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             config.roles = config.roles.filter(r => r.roleId !== role.id);
             await config.save();
 
-            return interaction.reply({ content: `🗑️ Removed configuration for **${role.name}**.`, ephemeral: true });
+            return interaction.reply({ content: `🗑️ Removed configuration for **${role.name}**.`, flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
 
         if (subcommand === 'clear') {
-            if (!config) return interaction.reply({ content: '⚠️ No configuration to clear.', ephemeral: true });
+            if (!config) return interaction.reply({ content: '⚠️ No configuration to clear.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
             config.roles = [];
             await config.save();
 
-            return interaction.reply({ content: '🧹 All nickname configurations cleared.', ephemeral: true });
+            return interaction.reply({ content: '🧹 All nickname configurations cleared.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
 

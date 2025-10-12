@@ -1,23 +1,3 @@
-/*
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-                                                 
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
-                    
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
-
-Command Verified : ✓  
-Website        : ssrr.tech  
-Test Passed    : ✓
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-*/
 
 
 
@@ -96,7 +76,10 @@ async function endQuiz(interaction, channelId, reason) {
             await channel.send({ embeds: [endEmbed] });
         }
     } else {
-        await interaction.reply({ content: 'There is no active quiz to end.', ephemeral: true });
+        await interaction.reply({ 
+            content: 'There is no active quiz to end.', 
+            flags: 64 
+        }); // InteractionResponseFlags.Ephemeral
     }
 }
 
@@ -117,7 +100,10 @@ module.exports = {
 
             if (subcommand === 'start') {
                 if (activeQuizzes.has(channelId)) {
-                    await interaction.reply({ content: 'There is already an active quiz in this channel.', ephemeral: true });
+                    await interaction.reply({ 
+                        content: 'There is already an active quiz in this channel.', 
+                        flags: 64 
+                    }); // InteractionResponseFlags.Ephemeral
                     return;
                 }
 
@@ -166,7 +152,10 @@ module.exports = {
                             if (lastPermissionMessage) {
                                 await lastPermissionMessage.delete();
                             }
-                            lastPermissionMessage = await response.channel.send({ content: `❌ ${response.author} does not have permission to submit answers. Please answer only in your quiz.`, ephemeral: true });
+                            lastPermissionMessage = await response.channel.send({ 
+                                content: `❌ ${response.author} does not have permission to submit answers. Please answer only in your quiz.`, 
+                                flags: 64 
+                            }); // InteractionResponseFlags.Ephemeral
                             return;
                         }
 
@@ -174,9 +163,15 @@ module.exports = {
 
                         if (userAnswer === correctAnswer) {
                             quizData.correctAnswers++;
-                            await response.reply({ content: '✅ Correct!', ephemeral: true });
+                            await response.reply({ 
+                                content: '✅ Correct!', 
+                                flags: 64 
+                            }); // InteractionResponseFlags.Ephemeral
                         } else {
-                            await response.reply({ content: `❌ Incorrect! The correct answer was ${correctAnswer}.`, ephemeral: true });
+                            await response.reply({ 
+                                content: `❌ Incorrect! The correct answer was ${correctAnswer}.`, 
+                                flags: 64 
+                            }); // InteractionResponseFlags.Ephemeral
                         }
 
                         quizData.currentQuestionIndex++;
@@ -201,36 +196,21 @@ module.exports = {
                     });
                 };
 
-                await interaction.reply({ content: '🎉 Math quiz started! Answer the questions with `!<your answer>`.', ephemeral: true });
+                await interaction.reply({ 
+                    content: '🎉 Math quiz started! Answer the questions with `!<your answer>`.', 
+                    flags: 64 
+                }); // InteractionResponseFlags.Ephemeral
                 startNextQuestion();
             }
         } catch (error) {
             console.error('Error executing math quiz command:', error);
-            await interaction.reply({ content: 'There was an error executing the command.', ephemeral: true });
+            await interaction.reply({ 
+                content: 'There was an error executing the command.', 
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
     },
 };
 
-
-/*
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-                                                 
-  _________ ___ ___ ._______   _________    
- /   _____//   |   \|   \   \ /   /  _  \   
- \_____  \/    ~    \   |\   Y   /  /_\  \  
- /        \    Y    /   | \     /    |    \ 
-/_______  /\___|_  /|___|  \___/\____|__  / 
-        \/       \/                     \/  
-                    
-DISCORD :  https://discord.com/invite/xQF9f9yUEM                   
-YouTube : https://www.youtube.com/@GlaceYT                         
-
-Command Verified : ✓  
-Website        : ssrr.tech  
-Test Passed    : ✓
-
-☆.。.:*・°☆.。.:*・°☆.。.:*・°☆.。.:*・°☆
-*/
 
 

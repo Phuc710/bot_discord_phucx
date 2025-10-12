@@ -65,7 +65,7 @@ module.exports = {
                     content: filter 
                         ? `No ${typeMessage} custom emojis found matching '${filter}'`
                         : `No ${typeMessage} custom emojis found`,
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 
@@ -126,7 +126,7 @@ module.exports = {
             if (!interaction.replied && !interaction.deferred) {
                 await interaction.reply({ 
                     content: lang.errorExecutingCommand, 
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 }).catch(() => {});
             }
         }

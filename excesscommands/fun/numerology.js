@@ -285,7 +285,7 @@ module.exports = {
             if (date.getDate() !== day || date.getMonth() !== month - 1) {
                 return interaction.reply({ 
                     content: '❌ Ngày sinh không hợp lệ! Vui lòng kiểm tra lại.', 
-                    ephemeral: true 
+                    flags: 64 // InteractionResponseFlags.Ephemeral 
                 });
             }
 

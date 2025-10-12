@@ -129,7 +129,7 @@ module.exports = {
         if (page > totalPages) {
           const message = await interaction.followUp({
             embeds: [new EmbedBuilder().setColor('#FFFF00').setDescription(`🚫 Page ${page} doesn't exist. Total pages: ${totalPages}`)],
-            ephemeral: true,
+            flags: 64 // InteractionResponseFlags.Ephemeral,
           });
           this.autoDeleteMessage(message, 7000);
           return;
@@ -297,7 +297,7 @@ module.exports = {
     if (!channel) {
       const message = await interaction.followUp({
         embeds: [new EmbedBuilder().setColor('#FFFF00').setDescription('🚫 You need to be in a voice channel to use music commands.')],
-        ephemeral: true,
+        flags: 64 // InteractionResponseFlags.Ephemeral,
       });
       this.autoDeleteMessage(message);
       return;

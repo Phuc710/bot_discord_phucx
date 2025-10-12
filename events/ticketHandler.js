@@ -174,7 +174,7 @@ async function sendTicketEmbed(channel) {
 
 
 async function handleTicketCreation(interaction, client) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64 });
 
     const { guild, user, values } = interaction;
     const ticketType = values[0];
@@ -184,7 +184,7 @@ async function handleTicketCreation(interaction, client) {
     if (!config || !config.status) {
         return interaction.followUp({ 
             content: '⚠️ Ticket system is not configured or is disabled.',
-            ephemeral: true 
+            flags: 64 
         });
     }
 
@@ -199,7 +199,7 @@ async function handleTicketCreation(interaction, client) {
         if (existingChannel) {
             return interaction.followUp({
                 content: `❌ You already have an open ticket: ${existingChannel}`,
-                ephemeral: true
+                flags: 64
             });
         } else {
           
@@ -288,20 +288,20 @@ async function handleTicketCreation(interaction, client) {
 
         return interaction.followUp({ 
             content: `✅ Your ticket has been created: ${ticketChannel}`,
-            ephemeral: true 
+            flags: 64 
         });
     } catch (err) {
         console.error(`Error creating ticket for ${user.tag}:`, err);
         return interaction.followUp({ 
             content: '❌ Failed to create your ticket. Please try again later.',
-            ephemeral: true 
+            flags: 64 
         });
     }
 }
 
 
 async function handleTicketClose(interaction, client) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64 });
 
     const ticketId = interaction.customId.replace('close_ticket_', '');
     const [userId, channelId] = ticketId.split('-');
@@ -314,7 +314,7 @@ async function handleTicketClose(interaction, client) {
     if (!config) {
         return interaction.followUp({ 
             content: '❌ Ticket configuration not found.',
-            ephemeral: true 
+            flags: 64 
         });
     }
 
@@ -325,7 +325,7 @@ async function handleTicketClose(interaction, client) {
     if (!isTicketOwner && !isAdmin) {
         return interaction.followUp({ 
             content: '❌ You do not have permission to close this ticket.',
-            ephemeral: true 
+            flags: 64 
         });
     }
 
@@ -378,7 +378,7 @@ async function handleTicketClose(interaction, client) {
 
         await interaction.followUp({ 
             content: '✅ Ticket closing in 5 seconds...',
-            ephemeral: true 
+            flags: 64 
         });
 
 
@@ -409,12 +409,12 @@ setTimeout(async () => {
         console.error("Error generating transcript:", err);
         return interaction.followUp({ 
             content: '❌ Failed to close ticket. Please try again.',
-            ephemeral: true 
+            flags: 64 
         });
     }
 }
 async function handleStaffPing(interaction, client) {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64 });
 
     const { guild, channel, member } = interaction;
     const configEntry = await TicketConfig.findOne({ serverId: guild.id });
@@ -427,7 +427,7 @@ async function handleStaffPing(interaction, client) {
                     .setTitle('⚠️ Staff Role Not Configured')
                     .setDescription('Unable to ping staff as no admin role is set for tickets.')
             ],
-            ephemeral: true
+            flags: 64
         });
     }
 
@@ -443,7 +443,7 @@ async function handleStaffPing(interaction, client) {
                     .setTitle('🕒 Cooldown Active')
                     .setDescription(`You can ping staff again <t:${Math.floor(nextPing.getTime() / 1000)}:R>.`)
             ],
-            ephemeral: true
+            flags: 64
         });
     }
 
@@ -471,7 +471,7 @@ async function handleStaffPing(interaction, client) {
         .setTitle('✅ Staff Notified')
         .setDescription('A support team member has been notified and will assist you shortly.');
 
-    await interaction.followUp({ embeds: [confirmationEmbed], ephemeral: true });
+    await interaction.followUp({ embeds: [confirmationEmbed], flags: 64 });
 }
 async function cleanupStaleTickets(client) {
     const allTickets = await TicketUserData.find({});

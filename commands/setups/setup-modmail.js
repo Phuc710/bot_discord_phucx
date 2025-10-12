@@ -77,13 +77,12 @@ module.exports = {
 
             return interaction.reply({
                 content: `📬 Mod mail configured: **${status ? 'enabled' : 'disabled'}**.\n📨 Logs: ${logChannel}\n👮 Admin Role: ${adminRole}`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'view') {
             const config = await ModMailConfig.findOne({ guildId });
             if (!config) {
-                return interaction.reply({ content: '❌ No mod mail config found for this server.', ephemeral: true });
+                return interaction.reply({ content: '❌ No mod mail config found for this server.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             const embed = new EmbedBuilder()
@@ -95,7 +94,7 @@ module.exports = {
                     { name: 'Admin Role', value: `<@&${config.adminRoleId}>`, inline: true }
                 );
 
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
 
         } else if (subcommand === 'edit') {
             const updates = {};
@@ -109,13 +108,12 @@ module.exports = {
 
             const result = await ModMailConfig.findOneAndUpdate({ guildId }, updates, { new: true });
             if (!result) {
-                return interaction.reply({ content: '❌ No mod mail configuration to edit. Please run `/setup-modmail configure` first.', ephemeral: true });
+                return interaction.reply({ content: '❌ No mod mail configuration to edit. Please run `/setup-modmail configure` first.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
 
             return interaction.reply({
                 content: `✅ Mod mail configuration updated.`,
-                ephemeral: true
-            });
+                flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
     } else {
         const embed = new EmbedBuilder()

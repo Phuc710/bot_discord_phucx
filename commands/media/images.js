@@ -110,7 +110,7 @@ module.exports = {
 
             await interaction.editReply({
                 content: 'Failed to fetch the image. Try again later.',
-                ephemeral: true
+                flags: 64 // InteractionResponseFlags.Ephemeral
             });
         }
     } else {

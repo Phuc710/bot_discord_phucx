@@ -76,15 +76,14 @@ module.exports = {
 
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
             const subcommand = interaction.options.getSubcommand();
             const client = interaction.client;
             
             if (interaction.user.id !== config.ownerId) {
                 return interaction.editReply({
                     content: '❌ Only the **bot owner** can use this command.',
-                    ephemeral: true
-                });
+                    flags: 64 }); // InteractionResponseFlags.Ephemeral;
             }
             
             if (subcommand === 'add') {

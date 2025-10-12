@@ -43,11 +43,14 @@ module.exports = {
         if (hasBadPattern || hasBlockedWord) {
             return interaction.reply({
                 content: '❌ Your message was blocked due to unsafe content (mention, link, invite, caps, or profanity).',
-                ephemeral: true
-            });
+                flags: 64 
+            }); // InteractionResponseFlags.Ephemeral
         }
 
-        await interaction.reply({ content: '✅ Message sent!', ephemeral: true });
+        await interaction.reply({ 
+            content: '✅ Message sent!', 
+            flags: 64 
+        }); // InteractionResponseFlags.Ephemeral
 
         if (useEmbed) {
             const embed = new EmbedBuilder()

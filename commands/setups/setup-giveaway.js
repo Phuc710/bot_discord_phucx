@@ -54,7 +54,7 @@ module.exports = {
       const embed = new EmbedBuilder()
         .setColor('#ff0000')
         .setDescription(lang.giveawayNoPermissions);
-      return interaction.reply({ embeds: [embed], ephemeral: true });
+      return interaction.reply({ embeds: [embed], flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     const subcommand = interaction.options.getSubcommand();
@@ -126,7 +126,7 @@ async function handleStartGiveaway(interaction) {
   interaction.client.giveaways.push(giveaway);
   await saveGiveaway(giveaway);
 
-  await interaction.reply({ content: lang.giveawayStarted, ephemeral: true });
+  await interaction.reply({ content: lang.giveawayStarted, flags: 64 }); // InteractionResponseFlags.Ephemeral;
 }
 
 async function handleEditGiveaway(interaction) {
@@ -134,7 +134,7 @@ async function handleEditGiveaway(interaction) {
   const giveaway = interaction.client.giveaways.find(g => g.messageId === messageId);
 
   if (!giveaway) {
-    return interaction.reply({ content: 'Giveaway not found. Please check the message ID.', ephemeral: true });
+    return interaction.reply({ content: 'Giveaway not found. Please check the message ID.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 
   // Get updated values
@@ -177,10 +177,10 @@ async function handleEditGiveaway(interaction) {
     // Save to database
     await saveGiveaway(giveaway);
 
-    return interaction.reply({ content: 'Giveaway updated successfully!', ephemeral: true });
+    return interaction.reply({ content: 'Giveaway updated successfully!', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   } catch (error) {
     console.error('Error updating giveaway:', error);
-    return interaction.reply({ content: 'Failed to update the giveaway. Please check if the message still exists.', ephemeral: true });
+    return interaction.reply({ content: 'Failed to update the giveaway. Please check if the message still exists.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 }
 
@@ -189,11 +189,11 @@ async function handleEndGiveaway(interaction) {
   const giveaway = interaction.client.giveaways.find(g => g.messageId === messageId);
 
   if (!giveaway) {
-    return interaction.reply({ content: 'Giveaway not found. Please check the message ID.', ephemeral: true });
+    return interaction.reply({ content: 'Giveaway not found. Please check the message ID.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 
   try {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
     
     // End the giveaway immediately
     const channel = await interaction.client.channels.fetch(giveaway.channel);
@@ -236,10 +236,10 @@ async function handleEndGiveaway(interaction) {
     interaction.client.giveaways = interaction.client.giveaways.filter(g => g.messageId !== messageId);
     await deleteGiveaway(messageId);
 
-    return interaction.editReply({ content: 'Giveaway ended successfully!', ephemeral: true });
+    return interaction.editReply({ content: 'Giveaway ended successfully!', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   } catch (error) {
     console.error('Error ending giveaway:', error);
-    return interaction.editReply({ content: 'Failed to end the giveaway. Please check if the message still exists.', ephemeral: true });
+    return interaction.editReply({ content: 'Failed to end the giveaway. Please check if the message still exists.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 }
 
@@ -248,7 +248,7 @@ async function handleRerollGiveaway(interaction) {
   const winnerCount = interaction.options.getInteger('winners') || 1;
 
   try {
-    await interaction.deferReply({ ephemeral: true });
+    await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
 
     // Try to find the giveaway in database first (it might be already ended)
     const allGiveaways = await getGiveaways();
@@ -266,7 +266,7 @@ async function handleRerollGiveaway(interaction) {
         const message = await channel.messages.fetch(messageId);
         
         if (!message.embeds.length || !message.embeds[0].title || !message.embeds[0].description.includes('Prize:')) {
-          return interaction.editReply({ content: 'That message does not appear to be a giveaway.', ephemeral: true });
+          return interaction.editReply({ content: 'That message does not appear to be a giveaway.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         // Extract entries from message if possible
@@ -285,12 +285,12 @@ async function handleRerollGiveaway(interaction) {
         }
       } catch (error) {
         console.error('Error fetching message for reroll:', error);
-        return interaction.editReply({ content: 'Failed to find the giveaway message. Please check if the message still exists.', ephemeral: true });
+        return interaction.editReply({ content: 'Failed to find the giveaway message. Please check if the message still exists.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     }
 
     if (!giveaway.entries || giveaway.entries.length === 0) {
-      return interaction.editReply({ content: 'This giveaway has no entries to reroll.', ephemeral: true });
+      return interaction.editReply({ content: 'This giveaway has no entries to reroll.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
 
     // Draw new winners
@@ -313,10 +313,10 @@ async function handleRerollGiveaway(interaction) {
       }]
     });
 
-    return interaction.editReply({ content: 'Giveaway rerolled successfully!', ephemeral: true });
+    return interaction.editReply({ content: 'Giveaway rerolled successfully!', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   } catch (error) {
     console.error('Error rerolling giveaway:', error);
-    return interaction.editReply({ content: 'Failed to reroll the giveaway. Please check if the message still exists.', ephemeral: true });
+    return interaction.editReply({ content: 'Failed to reroll the giveaway. Please check if the message still exists.', flags: 64 }); // InteractionResponseFlags.Ephemeral;
   }
 }
 

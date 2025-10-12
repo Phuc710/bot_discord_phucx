@@ -16,7 +16,7 @@ module.exports = {
 
     async execute(interaction) {
         if (interaction.isCommand && interaction.isCommand()) {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: 64  }); // InteractionResponseFlags.Ephemeral;
 
         const guild = interaction.guild;
         const userId = interaction.user.id;

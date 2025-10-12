@@ -42,8 +42,7 @@ module.exports = {
     if (!config) {
       return interaction.reply({
         content: '❌ No auto voice configuration found for this server. Please use `/setup-autovoice set` first.',
-        ephemeral: true
-      });
+        flags: 64 }); // InteractionResponseFlags.Ephemeral;
     }
     
     const subcommand = interaction.options.getSubcommand();
@@ -56,8 +55,7 @@ module.exports = {
         if (allowedRoleIds.includes(role.id)) {
           return interaction.reply({
             content: `Role ${role.name} is already allowed to create voice channels.`,
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         allowedRoleIds.push(role.id);
@@ -71,8 +69,7 @@ module.exports = {
         
         return interaction.reply({
           content: `✅ Role ${role.name} can now create voice channels.`,
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       case 'remove-role': {
@@ -82,8 +79,7 @@ module.exports = {
         if (!allowedRoleIds.includes(role.id)) {
           return interaction.reply({
             content: `Role ${role.name} is not in the allowed roles list.`,
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         const updatedRoles = allowedRoleIds.filter(id => id !== role.id);
@@ -97,8 +93,7 @@ module.exports = {
         
         return interaction.reply({
           content: `✅ Role ${role.name} removed from allowed roles list.`,
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       case 'list-roles': {
@@ -107,8 +102,7 @@ module.exports = {
         if (allowedRoleIds.length === 0) {
           return interaction.reply({
             content: 'No specific roles are required - any member can create voice channels.',
-            ephemeral: true
-          });
+            flags: 64 }); // InteractionResponseFlags.Ephemeral;
         }
         
         const rolesList = allowedRoleIds.map(roleId => {
@@ -124,8 +118,7 @@ module.exports = {
         
         return interaction.reply({
           embeds: [embed],
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
       
       case 'clear-roles': {
@@ -138,8 +131,7 @@ module.exports = {
         
         return interaction.reply({
           content: '✅ All role requirements have been removed. Anyone can now create voice channels.',
-          ephemeral: true
-        });
+          flags: 64 }); // InteractionResponseFlags.Ephemeral;
       }
     }
   } else {

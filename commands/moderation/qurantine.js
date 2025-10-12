@@ -29,7 +29,9 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ 
+            flags: 64 
+        }); // InteractionResponseFlags.Ephemeral
         
         const subcommand = interaction.options.getSubcommand();
         const target = interaction.options.getUser('user');
