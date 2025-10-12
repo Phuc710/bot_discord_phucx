@@ -23,13 +23,6 @@ module.exports = {
         port: 4543,
         secure: false
       },
-      {
-        name: "LavaLink V4",
-        password: "cocaine",
-        host: "phode1.danbot.host",
-        port: 1351,
-        secure: false
-      }
     ]
 };
 
