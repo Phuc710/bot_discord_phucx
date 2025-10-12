@@ -130,17 +130,6 @@ module.exports = (client) => {
             if (oldState.member.id === client.user.id && oldState.channelId && !newState.channelId) {
                 const player = client.riffy.players.get(oldState.guild.id);
                 if (player) {
-                    // Reset bot status khi bị ngắt kết nối
-                    try {
-                        await client.user.setActivity({
-                            name: `🎵 Ready to play music!`,
-                            type: 2 // LISTENING
-                        });
-                        console.log('Bot status reset: Disconnected from voice');
-                    } catch (error) {
-                        console.error('Error resetting bot status:', error);
-                    }
-                  
                     await messageManager.cleanupGuildMessages(client, oldState.guild.id);
                     
                 
@@ -202,18 +191,6 @@ module.exports = (client) => {
         client.riffy.on('trackStart', async (player, track) => {
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
-            
-            // Cập nhật bot status khi phát nhạc
-            try {
-                await client.user.setActivity({
-                    name: `${track.info.title} - ${track.info.author}`,
-                    type: 2, // LISTENING
-                    url: track.info.uri
-                });
-                console.log(`Bot status updated: Now playing ${track.info.title}`);
-            } catch (error) {
-                console.error('Error updating bot status:', error);
-            }
             
             await messageManager.cleanupGuildMessages(client, guildId);
             
@@ -295,23 +272,6 @@ module.exports = (client) => {
         client.riffy.on('trackEnd', async (player) => {
             const guildId = player.guildId;
             
-            // Reset bot status khi bài hát kết thúc
-            try {
-                // Kiểm tra xem còn player nào khác đang phát không
-                const hasOtherPlayers = Array.from(client.riffy.players.values())
-                    .some(p => p.guildId !== guildId && p.current);
-                    
-                if (!hasOtherPlayers) {
-                    await client.user.setActivity({
-                        name: `🎵 Sẵn sàng phát nhạc!`,
-                        type: 2 // LISTENING
-                    });
-                    console.log('Bot status reset: Sẵn sàng phát nhạc');
-                }
-            } catch (error) {
-                console.error('Error resetting bot status:', error);
-            }
-            
             await messageManager.cleanupGuildMessages(client, guildId, ['track']);
             
            
@@ -324,17 +284,6 @@ module.exports = (client) => {
         client.riffy.on("queueEnd", async (player) => {
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
-            
-            // Reset bot status khi queue kết thúc
-            try {
-                await client.user.setActivity({
-                    name: `🎵 Sẵn sàng phát nhạc!`,
-                    type: 2 // LISTENING
-                });
-                console.log('Bot status reset: Queue ended');
-            } catch (error) {
-                console.error('Error resetting bot status:', error);
-            }
             
             await messageManager.cleanupGuildMessages(client, guildId);
             
@@ -453,17 +402,6 @@ module.exports = (client) => {
                         if (queueDisplayTimeouts.has(interaction.guildId)) {
                             clearTimeout(queueDisplayTimeouts.get(interaction.guildId));
                             queueDisplayTimeouts.delete(interaction.guildId);
-                        }
-                        
-                        // Reset bot status khi dừng nhạc
-                        try {
-                            await client.user.setActivity({
-                                name: `🎵 Ready to play music!`,
-                                type: 2 // LISTENING
-                            });
-                            console.log('Bot status reset: Music stopped manually');
-                        } catch (error) {
-                            console.error('Error resetting bot status:', error);
                         }
                         
                         player.destroy();
@@ -1052,17 +990,6 @@ module.exports = (client) => {
         client.once('clientReady', () => {
             client.riffy.init(client.user.id);
             console.log('\x1b[35m[ MUSIC ]\x1b[0m', '\x1b[32mLavalink Music System Active with Enhanced Cleanup ✅\x1b[0m');
-            
-            // Khởi tạo bot status
-            try {
-                client.user.setActivity({
-                    name: `🎵 Ready to play music!`,
-                    type: 2 // LISTENING
-                });
-                console.log('\x1b[35m[ BOT STATUS ]\x1b[0m', '\x1b[32mBot status initialized ✅\x1b[0m');
-            } catch (error) {
-                console.error('Error setting initial bot status:', error);
-            }
             
             setTimeout(async () => {
                 for (const guild of client.guilds.cache.values()) {
