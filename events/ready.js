@@ -75,7 +75,7 @@ module.exports = {
             try {
                 // Kiểm tra cấu hình status
                 if (!config.status) {
-                    console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.yellow}Không tìm thấy cấu hình status trong config.json${colors.reset}`);
+                    console.log(`${colors.yellow}[ CẢNH BÁO ]${colors.reset} ${colors.yellow}Không tìm thấy cấu hình status trong config.js${colors.reset}`);
                     return;
                 }
                 

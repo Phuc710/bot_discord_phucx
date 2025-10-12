@@ -4,9 +4,7 @@ const { MongoClient } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 const colors = require('./UI/colors/colors');
-const configPath = path.join(__dirname, 'config.json');
-
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+const config = require('./config.js');
 
 const uri = config.mongodbUri || process.env.MONGODB_URI;
 

@@ -15,6 +15,20 @@ module.exports = {
         host: "lava-v4.ajieblogs.eu.org",
         port: 443,
         secure: true
+      },
+      {
+        name: "ANADBT",
+        password: "anadbt",
+        host: "23.80.88.110",
+        port: 4543,
+        secure: false
+      },
+      {
+        name: "LavaLink V4",
+        password: "cocaine",
+        host: "phode1.danbot.host",
+        port: 1351,
+        secure: false
       }
     ]
 };

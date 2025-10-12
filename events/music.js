@@ -117,11 +117,27 @@ module.exports = (client) => {
         });
 
         client.riffy.on('nodeConnect', (node) => {
-            console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.name}\x1b[0m`);
+            console.log(`\x1b[34m[ LAVALINK CONNECTION ]\x1b[0m Node connected: \x1b[32m${node.name || 'Unknown'}\x1b[0m`);
+            if (node.options) {
+                console.log(`\x1b[36m[ LAVALINK INFO ]\x1b[0m Host: \x1b[33m${node.options.host}:${node.options.port}\x1b[0m | Secure: \x1b[${node.options.secure ? '32m✅' : '31m❌'}\x1b[0m`);
+            } else if (node.host) {
+                console.log(`\x1b[36m[ LAVALINK INFO ]\x1b[0m Host: \x1b[33m${node.host}:${node.port}\x1b[0m | Secure: \x1b[${node.secure ? '32m✅' : '31m❌'}\x1b[0m`);
+            } else {
+                console.log(`\x1b[36m[ LAVALINK INFO ]\x1b[0m Host information not available`);
+            }
+        });
+
+        client.riffy.on('nodeDisconnect', (node, code, reason) => {
+            console.log(`\x1b[31m[ LAVALINK DISCONNECT ]\x1b[0m Node disconnected: \x1b[33m${node?.name || 'Unknown'}\x1b[0m | Code: \x1b[31m${code}\x1b[0m | Reason: \x1b[31m${reason}\x1b[0m`);
         });
 
         client.riffy.on('nodeError', (node, error) => {
-            console.error(`\x1b[31m[ LAVALINK ]\x1b[0m Node \x1b[32m${node.name}\x1b[0m had an error: \x1b[33m${error.message}\x1b[0m`);
+            console.error(`\x1b[31m[ LAVALINK ERROR ]\x1b[0m Node \x1b[32m${node?.name || 'Unknown'}\x1b[0m had an error: \x1b[33m${error?.message || 'Unknown error'}\x1b[0m`);
+            console.error(`\x1b[31m[ LAVALINK ERROR DETAILS ]\x1b[0m Stack: \x1b[90m${error?.stack || 'No stack trace available'}\x1b[0m`);
+        });
+
+        client.riffy.on('nodeReconnect', (node) => {
+            console.log(`\x1b[33m[ LAVALINK RECONNECT ]\x1b[0m Attempting to reconnect node: \x1b[32m${node?.name || 'Unknown'}\x1b[0m`);
         });
 
    
@@ -189,6 +205,9 @@ module.exports = (client) => {
         });
 
         client.riffy.on('trackStart', async (player, track) => {
+            console.log(`\x1b[32m[ TRACK START ]\x1b[0m Playing: \x1b[36m${track.info.title}\x1b[0m by \x1b[33m${track.info.author}\x1b[0m in guild \x1b[35m${player.guildId}\x1b[0m`);
+            console.log(`\x1b[36m[ TRACK INFO ]\x1b[0m Duration: \x1b[33m${Math.floor(track.info.length / 1000)}s\x1b[0m | Source: \x1b[33m${track.info.sourceName}\x1b[0m | Requester: \x1b[33m${track.requester ? track.requester.username : 'Unknown'}\x1b[0m`);
+            
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
@@ -269,7 +288,8 @@ module.exports = (client) => {
         });
         
       
-        client.riffy.on('trackEnd', async (player) => {
+        client.riffy.on('trackEnd', async (player, track) => {
+            console.log(`\x1b[33m[ TRACK END ]\x1b[0m Track finished: \x1b[36m${track ? track.info.title : 'Unknown'}\x1b[0m in guild \x1b[35m${player.guildId}\x1b[0m`);
             const guildId = player.guildId;
             
             await messageManager.cleanupGuildMessages(client, guildId, ['track']);
@@ -282,6 +302,7 @@ module.exports = (client) => {
         });
 
         client.riffy.on("queueEnd", async (player) => {
+            console.log(`\x1b[35m[ QUEUE END ]\x1b[0m Queue ended in guild \x1b[35m${player.guildId}\x1b[0m`);
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
@@ -841,7 +862,12 @@ module.exports = (client) => {
         }
         
   
+        client.riffy.on('playerCreate', (player) => {
+            console.log(`\x1b[32m[ PLAYER CREATE ]\x1b[0m Player created for guild \x1b[35m${player.guildId}\x1b[0m | Voice Channel: \x1b[33m${player.voiceChannel}\x1b[0m | Text Channel: \x1b[33m${player.textChannel}\x1b[0m`);
+        });
+
         client.riffy.on('playerDestroy', async (player) => {
+            console.log(`\x1b[31m[ PLAYER DESTROY ]\x1b[0m Player destroyed for guild \x1b[35m${player.guildId}\x1b[0m`);
             const guildId = player.guildId;
             
          
@@ -990,6 +1016,7 @@ module.exports = (client) => {
         client.once('clientReady', () => {
             client.riffy.init(client.user.id);
             console.log('\x1b[35m[ MUSIC ]\x1b[0m', '\x1b[32mLavalink Music System Active with Enhanced Cleanup ✅\x1b[0m');
+            console.log(`\x1b[35m[ MUSIC ]\x1b[0m \x1b[36mInitializing connection to ${Array.isArray(lavalinkConfig.lavalink) ? lavalinkConfig.lavalink.length : 1} Lavalink node(s)...\x1b[0m`);
             
             setTimeout(async () => {
                 for (const guild of client.guilds.cache.values()) {

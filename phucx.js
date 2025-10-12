@@ -690,7 +690,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                 // Add copy instructions
                 const isViet = isVietnamese(reaction.message.content || '');
                 const instructions = isViet ? 
-                    '📝 **Hướng dẫn:** Select text ở trên và copy (Ctrl+C) để sử dụng!' :
+                    '📝 **Cảm thấy như nào:** OKE CHỨ NÍ!' :
                     '📝 **Instructions:** Select the text above and copy (Ctrl+C) to use!';
                 
                 copyMessage += instructions;

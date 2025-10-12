@@ -6,7 +6,7 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const config = require('../../config.json');
+const config = require('../../config.js');
 const cmdIcons = require('../../UI/icons/commandicons');
 const { helpBanner } = require('../../UI/banners/SetupBanners');
 

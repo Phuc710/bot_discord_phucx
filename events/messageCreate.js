@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { EmbedBuilder } = require('discord.js');
 const { serverConfigCollection, stickyMessageCollection, autoResponderCollection } = require('../mongodb');
-const configPath = path.join(__dirname, '..', 'config.json');
+const config = require('../config.js');
 const lang = require('./loadLanguage');
 const cmdIcons = require('../UI/icons/commandicons');
 const { serverLevelingLogsCollection } = require('../mongodb');
@@ -172,13 +172,6 @@ module.exports = {
         }
 
         try {
-            let config;
-            try {
-                const data = fs.readFileSync(configPath, 'utf8');
-                config = JSON.parse(data);
-            } catch (err) {
-                return message.reply(lang.error);
-            }
 
             const serverConfig = await serverConfigCollection.findOne({ serverId: guildId });
             const prefix = (serverConfig && serverConfig.prefix) || config.prefix;

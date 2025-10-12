@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const DisabledCommand = require('../../models/commands/DisabledCommands');
 const cmdIcons = require('../../UI/icons/commandicons');
 const checkPermissions = require('../../utils/checkPermissions');
-const config = require('../../config.json');
+const config = require('../../config.js');
 
 module.exports = {
     data: new SlashCommandBuilder()

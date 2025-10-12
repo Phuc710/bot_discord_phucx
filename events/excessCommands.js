@@ -2,7 +2,7 @@
     const { EmbedBuilder } = require('discord.js');
     const fs = require('fs');
     const path = require('path');
-    const config = require('../config.json');
+const config = require('../config.js');
     const DisabledCommand = require('../models/commands/DisabledCommands');
 
     module.exports = {

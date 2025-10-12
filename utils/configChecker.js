@@ -15,18 +15,18 @@ class ConfigChecker {
     }
 
     /**
-     * Kiểm tra file config.json
+     * Kiểm tra file config.js
      */
     checkConfigFile() {
         try {
-            const configPath = path.join(__dirname, '..', 'config.json');
+            const configPath = path.join(__dirname, '..', 'config.js');
             
             if (!fs.existsSync(configPath)) {
-                this.errors.push('File config.json không tồn tại');
+                this.errors.push('File config.js không tồn tại');
                 return false;
             }
 
-            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            const config = require(configPath);
             
             // Kiểm tra các trường bắt buộc
             const requiredFields = ['token', 'prefix', 'mongodbUri'];
@@ -52,11 +52,11 @@ class ConfigChecker {
                 }
             }
 
-            this.success.push('File config.json hợp lệ');
+            this.success.push('File config.js hợp lệ');
             return true;
 
         } catch (error) {
-            this.errors.push(`Lỗi đọc config.json: ${error.message}`);
+            this.errors.push(`Lỗi đọc config.js: ${error.message}`);
             return false;
         }
     }
@@ -69,7 +69,7 @@ class ConfigChecker {
             const envPath = path.join(__dirname, '..', '.env');
             
             if (!fs.existsSync(envPath)) {
-                this.warnings.push('File .env không tồn tại - bot sẽ dùng cấu hình từ config.json');
+                this.warnings.push('File .env không tồn tại - bot sẽ dùng cấu hình từ config.js');
                 return true;
             }
 

@@ -1,7 +1,7 @@
 const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord.js');
 require('dotenv').config();
 const axios = require('axios');
-const config = require('./config.json');
+const config = require('./config.js');
 const colors = require('./UI/colors/colors');
 const loadLogHandlers = require('./logHandlers');
 const scanCommands = require('./utils/scanCommands');

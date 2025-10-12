@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { categories } = require('../config.json');
+const { categories } = require('../config.js');
 const lang = require('./loadLanguage');
 const client = require('../main');
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
