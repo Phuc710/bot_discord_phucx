@@ -3,6 +3,7 @@ const {
     ModalBuilder, TextInputBuilder, ActionRowBuilder, TextInputStyle,
     EmbedBuilder, ButtonBuilder, ButtonStyle
 } = require('discord.js');
+const { createStatusIconAttachments, getStatusIconUrls } = require('../utils/statusIcons');
 
 module.exports = (client) => {
     client.on('interactionCreate', async (interaction) => {
@@ -42,13 +43,16 @@ module.exports = (client) => {
                 .setColor('Blue')
                 .setFooter({ text: `From: ${interaction.user.tag} (${interaction.user.id})` });
 
+            const statusIcons = createStatusIconAttachments(['tick', 'wrong']);
             const row = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId(`accept_application_${interaction.user.id}`).setLabel('✅ Accept').setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId(`deny_application_${interaction.user.id}`).setLabel('❌ Deny').setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId(`accept_application_${interaction.user.id}`).setLabel('Accept').setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId(`deny_application_${interaction.user.id}`).setLabel('Deny').setStyle(ButtonStyle.Danger)
             );
 
-            await responseChannel.send({ embeds: [embed], components: [row] });
-            interaction.reply({ content: '✅ Your application has been submitted!', flags: 64 }); // InteractionResponseFlags.Ephemeral
+            await responseChannel.send({ embeds: [embed], components: [row], files: statusIcons });
+            
+            const replyIcons = createStatusIconAttachments(['tick']);
+            interaction.reply({ content: 'Your application has been submitted!', flags: 64, files: replyIcons }); // InteractionResponseFlags.Ephemeral
         }
 
         else if (interaction.isButton() &&
@@ -61,12 +65,13 @@ module.exports = (client) => {
             const color = status === 'accepted' ? 'Green' : 'Red';
 
             const updatedEmbed = EmbedBuilder.from(embed).setColor(color);
+            const statusIcons = createStatusIconAttachments(['tick', 'wrong']);
             const disabledRow = new ActionRowBuilder().addComponents(
-                new ButtonBuilder().setCustomId('done_accept').setLabel('✅ Accepted').setDisabled(true).setStyle(ButtonStyle.Success),
-                new ButtonBuilder().setCustomId('done_deny').setLabel('❌ Denied').setDisabled(true).setStyle(ButtonStyle.Danger)
+                new ButtonBuilder().setCustomId('done_accept').setLabel('Accepted').setDisabled(true).setStyle(ButtonStyle.Success),
+                new ButtonBuilder().setCustomId('done_deny').setLabel('Denied').setDisabled(true).setStyle(ButtonStyle.Danger)
             );
 
-            await interaction.message.edit({ embeds: [updatedEmbed], components: [disabledRow] });
+            await interaction.message.edit({ embeds: [updatedEmbed], components: [disabledRow], files: statusIcons });
 
             try {
                 const user = await client.users.fetch(userId);

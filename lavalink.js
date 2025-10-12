@@ -16,13 +16,6 @@ module.exports = {
         port: 443,
         secure: true
       },
-      {
-        name: "ANADBT",
-        password: "anadbt",
-        host: "23.80.88.110",
-        port: 4543,
-        secure: false
-      },
     ]
 };
 

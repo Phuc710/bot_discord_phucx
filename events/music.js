@@ -233,7 +233,8 @@ module.exports = (client) => {
                     backgroundColor: "#FF00FF",
                 });
         
-                const attachment = new AttachmentBuilder(cardImage, { name: 'songcard.png' });
+                const cardAttachment = new AttachmentBuilder(cardImage, { name: 'songcard.png' });
+                const itachiAttachment = new AttachmentBuilder(musicIcons.itachiIconPath, { name: 'itachi-sharingan.gif' });
         
                 const description = `- Title: ${track.info.title} \n`+
                 ` - Artist: ${track.info.author} \n`+
@@ -275,7 +276,7 @@ module.exports = (client) => {
                 
                 const message = await channel.send({
                     embeds: [embed],
-                    files: [attachment],
+                    files: [cardAttachment, itachiAttachment],
                     components: components
                 });
                 
