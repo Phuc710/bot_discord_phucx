@@ -6,6 +6,7 @@ const colors = require('./UI/colors/colors');
 const loadLogHandlers = require('./logHandlers');
 const scanCommands = require('./utils/scanCommands');
 const { EmbedBuilder, Partials } = require('discord.js');
+const StatusManager = require('./utils/statusManager');
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -127,6 +128,9 @@ require('./handlers/economyScheduler')(client);
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN || config.token);
 
 client.once('clientReady', async () => {
+    // Initialize status manager before loading events
+    client.statusManager = new StatusManager(client);
+
     // Load events first when client is ready
     loadEvents(client);
     
@@ -144,7 +148,10 @@ client.once('clientReady', async () => {
         await fetchAndRegisterCommands();
         await require('./handlers/commands')(client, config, colors);
 
-
+        if (client.statusManager) {
+            const serverCount = client.guilds.cache.size;
+            await client.statusManager.setServerCountStatus(serverCount);
+        }
     } catch (error) {
         console.log(`${colors.red}[ LỖI HỆ THỐNG ]${colors.reset} ${colors.red}${error}${colors.reset}`);
     }

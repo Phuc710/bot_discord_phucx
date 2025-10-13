@@ -1,4 +1,4 @@
-// Xử lý lỗi toàn cục
+﻿// Xử lý lỗi toàn cục
 const colors = require('./UI/colors/colors');
 
 process.on('uncaughtException', (error) => {
@@ -157,8 +157,6 @@ const loadEventHandlers = () => {
     console.log(`${colors.yellow}Phát triển bởi: ${colors.reset}${colors.magenta}Phucx - Made with ❤️ for Vietnam${colors.reset}\n`);
 };
 
-// Load event handlers when client is ready
-// Use 'ready' event temporarily for compatibility, then switch to clientReady after bot is stable
 if (client && typeof client.on === 'function') {
     let eventHandlersLoaded = false;
     

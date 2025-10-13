@@ -208,6 +208,20 @@ module.exports = (client) => {
             console.log(`\x1b[32m[ TRACK START ]\x1b[0m Playing: \x1b[36m${track.info.title}\x1b[0m by \x1b[33m${track.info.author}\x1b[0m in guild \x1b[35m${player.guildId}\x1b[0m`);
             console.log(`\x1b[36m[ TRACK INFO ]\x1b[0m Duration: \x1b[33m${Math.floor(track.info.length / 1000)}s\x1b[0m | Source: \x1b[33m${track.info.sourceName}\x1b[0m | Requester: \x1b[33m${track.requester ? track.requester.username : 'Unknown'}\x1b[0m`);
             
+            if (client.statusManager) {
+                const voiceChannel = player.voiceChannel ? client.channels.cache.get(player.voiceChannel) : null;
+                try {
+                    await client.statusManager.setMusicStatus(track.info.title, {
+                        voiceChannel,
+                        presencePrefix: '🎵',
+                        channelPrefix: '✨',
+                        channelEmoji: { name: '🎵' }
+                    });
+                } catch (statusError) {
+                    console.error('[STATUS] Error updating music presence for Lavalink track start:', statusError.message);
+                }
+            }
+
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
@@ -307,6 +321,14 @@ module.exports = (client) => {
             const channel = client.channels.cache.get(player.textChannel);
             const guildId = player.guildId;
             
+            if (client.statusManager) {
+                try {
+                    await client.statusManager.clearMusicStatus();
+                } catch (statusError) {
+                    console.error('[STATUS] Error clearing music presence on queue end:', statusError.message);
+                }
+            }
+
             await messageManager.cleanupGuildMessages(client, guildId);
             
            
@@ -871,6 +893,14 @@ module.exports = (client) => {
             console.log(`\x1b[31m[ PLAYER DESTROY ]\x1b[0m Player destroyed for guild \x1b[35m${player.guildId}\x1b[0m`);
             const guildId = player.guildId;
             
+            if (client.statusManager) {
+                try {
+                    await client.statusManager.clearMusicStatus();
+                } catch (statusError) {
+                    console.error('[STATUS] Error clearing music presence on player destroy:', statusError.message);
+                }
+            }
+            
          
             await messageManager.cleanupGuildMessages(client, guildId);
             
@@ -909,6 +939,14 @@ module.exports = (client) => {
             
             const guildId = player.guildId;
             const channel = client.channels.cache.get(player.textChannel);
+            
+            if (client.statusManager) {
+                try {
+                    await client.statusManager.clearMusicStatus();
+                } catch (statusError) {
+                    console.error('[STATUS] Error clearing music presence on track error:', statusError.message);
+                }
+            }
             
          
             await messageManager.cleanupGuildMessages(client, guildId);

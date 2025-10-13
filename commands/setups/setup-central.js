@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType } = require('discord.js');
 const { centralMusicCollection } = require('../../mongodb');
-const cmdIcons = require('../../UI/icons/commandicons');
+const { createStatusIconAttachments, getStatusIconUrls } = require('../../utils/statusIcons');
 const checkPermissions = require('../../utils/checkPermissions');
 const phucx = require('../../phucx');
 
 const COMMAND_SECURITY_TOKEN = phucx.SECURITY_TOKEN || 'DEFAULT_TOKEN';
+const statusIconUrls = getStatusIconUrls();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -41,8 +42,13 @@ module.exports = {
             if (!interaction.member.permissions.has(PermissionFlagsBits.ManageChannels)) {
                 const embed = new EmbedBuilder()
                     .setColor('#ff0000')
-                    .setDescription('❌ Bạn cần quyền **Manage Channels** để sử dụng lệnh này.');
-                return interaction.reply({ embeds: [embed], flags: 64 });
+                    .setDescription('❌ Bạn cần quyền **Manage Channels** để sử dụng lệnh này.')
+                    .setFooter({ text: 'Permission required', iconURL: statusIconUrls.wrong });
+                return interaction.reply({
+                    embeds: [embed],
+                    files: createStatusIconAttachments(['wrong']),
+                    flags: 64
+                });
             }
 
             try {
@@ -178,32 +184,51 @@ module.exports = {
                         `📍 **Control Panel:** Ở trên tin nhắn này`
                     )
                     .setColor('#00ff00')
-                    .setFooter({ text: 'Hệ thống đã hoạt động', iconURL: cmdIcons.correctIcon });
+                    .setFooter({ text: 'Hệ thống đã hoạt động', iconURL: statusIconUrls.tick });
 
-                await interaction.followUp({ embeds: [successEmbed], flags: 64 });
+                await interaction.followUp({
+                    embeds: [successEmbed],
+                    files: createStatusIconAttachments(['tick']),
+                    flags: 64
+                });
 
             } catch (innerError) {
                 console.error('Error setting up central music system:', innerError);
                 const errorEmbed = new EmbedBuilder()
                     .setColor('#ff0000')
-                    .setDescription('❌ An error occurred while setting up the central music system. Please try again.');
-                
+                    .setDescription('❌ An error occurred while setting up the central music system. Please try again.')
+                    .setFooter({ text: 'Action failed', iconURL: statusIconUrls.wrong });
+
+                const errorPayload = {
+                    embeds: [errorEmbed],
+                    files: createStatusIconAttachments(['wrong']),
+                    flags: 64
+                };
+
                 if (!interaction.replied) {
-                    await interaction.reply({ embeds: [errorEmbed], flags: 64 });
+                    await interaction.reply(errorPayload);
                 } else {
-                    await interaction.editReply({ embeds: [errorEmbed] });
+                    await interaction.followUp(errorPayload);
                 }
             }
         } catch (error) {
             console.error('General error in setup-central command:', error);
             const errorEmbed = new EmbedBuilder()
                 .setColor('#ff0000')
-                .setDescription('❌ An unexpected error occurred. Please try again later.');
+                .setDescription('❌ An unexpected error occurred. Please try again later.')
+                .setFooter({ text: 'Action failed', iconURL: statusIconUrls.wrong });
+
+            const errorPayload = {
+                embeds: [errorEmbed],
+                files: createStatusIconAttachments(['wrong']),
+                flags: 64
+            };
             
             if (!interaction.replied) {
-                await interaction.reply({ embeds: [errorEmbed], flags: 64 });
+                await interaction.reply(errorPayload);
+            } else {
+                await interaction.followUp(errorPayload);
             }
         }
     }
 };
-

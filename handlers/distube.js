@@ -12,27 +12,21 @@ module.exports = async (client) => {
     const distubeConfig = require('../utils/distubeConfig'); 
     
     // Function to update bot status based on music state
-    const updateBotStatus = (song = null) => {
+    const updateBotStatus = async (song = null, voiceChannel = null) => {
         try {
-            if (song) {
+            if (song && client.statusManager) {
                 // Update status to show current song
-                client.user.setPresence({
-                    activities: [{
-                        name: `🎵 ${song.name}`,
-                        type: ActivityType.Listening
-                    }],
-                    status: 'online'
+                await client.statusManager.setMusicStatus(song.name, {
+                    voiceChannel,
+                    presencePrefix: '🎵',
+                    channelPrefix: '✨',
+                    channelEmoji: { name: '🎵' }
                 });
+            } else if (client.statusManager) {
+                // Clear music status and return to default
+                await client.statusManager.clearMusicStatus();
             } else {
-                // Set default status when no music is playing
-                const defaultStatus = config.status.rotateDefault[0] || { name: "Cùng lắng nghe || /help", type: "Playing" };
-                client.user.setPresence({
-                    activities: [{
-                        name: defaultStatus.name,
-                        type: ActivityType[defaultStatus.type] || ActivityType.Playing
-                    }],
-                    status: 'online'
-                });
+                // If StatusManager isn't available yet, skip presence changes to avoid conflicts
             }
         } catch (error) {
             console.error('Error updating bot status:', error);
@@ -148,7 +142,7 @@ module.exports = async (client) => {
      //    console.log(`Now playing: ${song.name} in ${queue.voiceChannel?.name}`);
         
         // Update bot status to show current song
-        updateBotStatus(song);
+        await updateBotStatus(song, queue.voiceChannel);
 
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -292,7 +286,7 @@ module.exports = async (client) => {
       //   console.log(`Queue finished in ${queue.voiceChannel?.name}`);
         
         // Reset bot status to default when queue finishes
-        updateBotStatus();
+        await updateBotStatus(null, queue.voiceChannel);
        
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -331,7 +325,7 @@ module.exports = async (client) => {
        //  console.log(`Disconnected from ${queue.voiceChannel?.name}`);
         
         // Reset bot status to default when disconnecting
-        updateBotStatus();
+        await updateBotStatus(null, queue.voiceChannel);
    
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
@@ -370,7 +364,7 @@ module.exports = async (client) => {
        // console.log(`Voice channel ${queue.voiceChannel?.name} is empty`);
         
         // Reset bot status to default when voice channel is empty
-        updateBotStatus();
+        await updateBotStatus(null, queue.voiceChannel);
      
         if (queue.voiceChannel) {
             await cleanupMessages(queue.voiceChannel.guild.id);
