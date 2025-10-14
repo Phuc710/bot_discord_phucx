@@ -14,19 +14,28 @@ module.exports = async (client) => {
     // Function to update bot status based on music state
     const updateBotStatus = async (song = null, voiceChannel = null) => {
         try {
-            if (song && client.statusManager) {
-                // Update status to show current song
-                await client.statusManager.setMusicStatus(song.name, {
-                    voiceChannel,
-                    presencePrefix: '🎵',
-                    channelPrefix: '✨',
-                    channelEmoji: { name: '🎵' }
-                });
-            } else if (client.statusManager) {
-                // Clear music status and return to default
-                await client.statusManager.clearMusicStatus();
+            if (!client.statusManager) return;
+
+            const guildId = voiceChannel?.guild?.id ?? null;
+            const statusOptions = {
+                voiceChannel,
+                guildId,
+                presencePrefix: '🎵',
+                channelPrefix: '✨',
+                channelEmoji: { name: '🎵' }
+            };
+
+            if (song) {
+                const pseudoPlayer = guildId
+                    ? { guildId, voiceChannel: voiceChannel?.id ?? null }
+                    : null;
+
+                await client.statusManager.onTrackStart(pseudoPlayer, { name: song.name }, statusOptions);
+            } else if (guildId) {
+                const pseudoPlayer = { guildId, voiceChannel: voiceChannel?.id ?? null };
+                await client.statusManager.onTrackEnd(pseudoPlayer, { final: true, guildId });
             } else {
-                // If StatusManager isn't available yet, skip presence changes to avoid conflicts
+                await client.statusManager.clearMusicStatus();
             }
         } catch (error) {
             console.error('Error updating bot status:', error);

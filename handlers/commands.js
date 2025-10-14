@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { REST, Routes } = require('discord.js');
-
+//commands.js
 module.exports = async (client, config, colors) => {
     const commandsPath = path.join(__dirname, '../commands');
     const commandFolders = fs.readdirSync(commandsPath);
@@ -15,6 +15,14 @@ module.exports = async (client, config, colors) => {
         for (const file of commandFiles) {
             const command = require(path.join(commandsPath, folder, file));
             client.commands.set(command.data.name, command);
+
+            if (Array.isArray(command.aliases)) {
+                for (const alias of command.aliases) {
+                    if (typeof alias === 'string' && alias.trim()) {
+                        client.commands.set(alias.toLowerCase(), command);
+                    }
+                }
+            }
             commands.push(command.data.toJSON());
         }
     }
