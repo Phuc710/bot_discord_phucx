@@ -112,11 +112,33 @@ class StatusManager {
         const emojiPayload = statusPayload.emoji?.name || CHANNEL_EMOJI;
 
         try {
+            // Kiểm tra permissions trước
+            const botMember = channel.guild.members.cache.get(this.client.user.id);
+            if (!botMember?.permissions.has('ManageChannels')) {
+                console.warn(`[STATUS] ⚠️ Bot thiếu quyền MANAGE_CHANNELS trong ${channel.name}`);
+                return;
+            }
+
+            // Restore channel cũ nếu khác
             if (this.activeVoiceStatus && this.activeVoiceStatus.channelId !== channel.id) {
                 await this.restoreVoiceChannelStatus();
             }
 
+            // Kiểm tra rate limit (Discord giới hạn 2 lần/10 phút cho topic)
+            const now = Date.now();
+            if (!this.topicRateLimit) this.topicRateLimit = {};
+            
+            const lastUpdate = this.topicRateLimit[channel.id] || 0;
+            const timeSinceLastUpdate = now - lastUpdate;
+            
+            // Nếu update quá nhanh, skip
+            if (timeSinceLastUpdate < 300000) { // 5 phút
+                console.log(`[STATUS] ⏳ Rate limit: chờ ${Math.ceil((300000 - timeSinceLastUpdate) / 1000)}s`);
+                return;
+            }
+
             if (typeof channel.setTopic === 'function') {
+                // Lưu topic cũ
                 if (!this.activeVoiceStatus || this.activeVoiceStatus.channelId !== channel.id) {
                     this.activeVoiceStatus = {
                         channelId: channel.id,
@@ -124,13 +146,28 @@ class StatusManager {
                     };
                 }
 
-                await channel.setTopic(`${emojiPayload} ${safeText}`.trim());
+                const newTopic = `${emojiPayload} ${safeText}`.trim();
+                
+                // Chỉ update nếu topic khác
+                if (channel.topic === newTopic) {
+                    console.log(`[STATUS] ℹ️ Topic đã đúng, bỏ qua update`);
+                    return;
+                }
+
+                await channel.setTopic(newTopic);
+                this.topicRateLimit[channel.id] = now;
                 console.log(`[STATUS] 💬 Đã cập nhật topic channel: ${channel.name}`);
             } else {
                 console.warn(`[STATUS] ⚠️ Channel ${channel.name} không hỗ trợ setTopic`);
             }
         } catch (error) {
-            console.error('[STATUS] ❌ Lỗi khi cập nhật topic channel:', error.message);
+            if (error.code === 50013) {
+                console.error('[STATUS] ❌ Bot thiếu quyền (Missing Permissions)');
+            } else if (error.code === 429) {
+                console.error('[STATUS] ❌ Rate limited - đợi vài phút');
+            } else {
+                console.error('[STATUS] ❌ Lỗi khi cập nhật topic:', error.message);
+            }
         }
     }
 
